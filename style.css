@@ -1,5 +1,5 @@
 body {
-    background-color:slategrey;
+    background-color:#6b6b6b;
 }
 
 /* table {
@@ -30,6 +30,7 @@ th {
 
 
 #calendar2 {
+    margin: auto;
     width: 300px;
     height: 300px;
     font: monospace;

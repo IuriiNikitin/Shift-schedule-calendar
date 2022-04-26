@@ -159,63 +159,35 @@ document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(3)').addEv
 });
 
 
-// function msToDays(value) {
-//     const seconds = value / 1000;
-//     const minutes = seconds / 60;
-//     const hours = minutes / 60;
-//     const days = hours / 24;
-//     return days;
-// }
-// function daysToMs(value) {
-//     const hours = value * 24;
-//     const minutes = hours * 60;
-//     const seconds = minutes * 60;
-//     const ms = seconds * 1000;
-//     return ms;
-// }
+
 
 const graphicD = [];
 
 const now = new Date();
 const currentYear = now.getFullYear();
-const currentMonth = now.getMonth() + 1;
+const currentMonth = now.getMonth();
 const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
-const startDate = new Date("01.02.2022");
+const startDate = new Date("01.01.2000");
 const finishDate = new Date(currentYear, currentMonth, lastDay);
+const firstDate = new Date(currentYear, currentMonth, 1);
 
-
-
-// for(let i = startDate.getTime(); i < finishDate.getTime(); i += daysToMs(6)) {
-//     graphicD.push(new Date(i).toLocaleDateString());
-//     graphicD.push(new Date(i + daysToMs(1)).toLocaleDateString());
-//     graphicD.push(new Date(i + daysToMs(2)).toLocaleDateString());
-// }
 
 function daysPlus(date, days) {
     return date.setDate(date.getDate() + days);
 }
 
-function abc(time) {
-    const now = new Date();
 
     for (let i = startDate; i < finishDate; daysPlus(i, 3)) {
-        const day1 = new Date(i).toLocaleDateString();
-        const day2 = new Date(daysPlus(i, 1)).toLocaleDateString();
-        const day3 = new Date(daysPlus(i, 1)).toLocaleDateString();
-        daysPlus(i, 1);
 
-        graphicD.push(day1);
-        graphicD.push(day2);
-        graphicD.push(day3);
+        if (i > firstDate) {
+            const day1 = new Date(i).toLocaleDateString();
+            const day2 = new Date(daysPlus(i, 1)).toLocaleDateString();
+            const day3 = new Date(daysPlus(i, 1)).toLocaleDateString();
+            daysPlus(i, 1);
+            graphicD.push(day1);
+            graphicD.push(day2);
+            graphicD.push(day3);
+        }
     }
 
     console.log(graphicD);
-
-    time(now);
-}
-
-abc(function (now) {
-    console.log(new Date() - now);
-});
-
-
