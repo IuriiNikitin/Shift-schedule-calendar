@@ -24,10 +24,19 @@ function getMaxIncomes() {
     getElement("https://portal.fss.ru/fss/sicklist/guest","script", function(element) {
 
         const maxIncomesObj = {};
+        let scriptIndex;
 
-        const maxIncomesPosition = element[4].innerHTML.indexOf("maxIncomes = ");
-        const maxIncomesString = element[4].innerHTML.slice(maxIncomesPosition + "maxIncomes = ".length);
+        for(let i = 0; i < element.length; i++) {
+            if(element[i].innerHTML.includes("maxIncomes = ")) { //находим номер скрипта с нужным значением
+               scriptIndex = i;
+            }
+        }
+
+        const maxIncomesPosition = element[scriptIndex].innerHTML.indexOf("maxIncomes = ");
+        const maxIncomesString = element[scriptIndex].innerHTML.slice(maxIncomesPosition + "maxIncomes = ".length);
         const maxIncomesArray = maxIncomesString.match(/'\d{2}\.\d{2}\.\d{4}':'\d{5,}'/igm);
+
+
 
         maxIncomesArray.forEach(element => {
             element = element.split(":");
@@ -37,7 +46,7 @@ function getMaxIncomes() {
         });
 
         console.log(maxIncomesObj);
-        return maxIncomesObj;
+        // return maxIncomesObj;
     });
 }
 
@@ -47,7 +56,8 @@ function getElement(url, selector, func) {
       if (response.ok) {return response.text();}
       throw new Error('Network response was not ok.');
     })
-    .then(data => {
+    .then(async data => {
+        data = await data.replace(/src=/gmi, ""); //убираем лишние ссылки
         const html = document.createElement("div");
         html.innerHTML = data;
         func(html.querySelectorAll(selector));
@@ -149,7 +159,7 @@ function Calendar2(id, year, month) {
 
 Calendar2("calendar2", new Date().getFullYear(), new Date().getMonth());
 // переключатель минус месяц
-document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(1)').addEventListener("click", () =>{
+document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(1)').addEventListener("click", () => {
     Calendar2("calendar2", document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month) - 1);
 });
 
@@ -190,4 +200,4 @@ function daysPlus(date, days) {
         }
     }
 
-    console.log(graphicD);
+    // console.log(graphicD);
