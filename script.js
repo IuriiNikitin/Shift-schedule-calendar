@@ -50,20 +50,23 @@ function getMaxIncomes() {
     });
 }
 
+// https://api.allorigins.win/get?url=
+// http://alloworigin.com/get?url=
+
 function getElement(url, selector, func) {
     fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`)
     .then(response => {
       if (response.ok) {return response.text();}
       throw new Error('Network response was not ok.');
     })
-    .then(async data => {
-        data = await data.replace(/src=/gmi, ""); //убираем лишние ссылки
+    .then(data => {
+        // console.log(data);
+        data =  data.replace(/src=/gmi, ""); //убираем лишние ссылки
         const html = document.createElement("div");
         html.innerHTML = data;
         func(html.querySelectorAll(selector));
         });
 }
-
 
 
 //Calendar
@@ -147,9 +150,9 @@ function Calendar2(id, year, month) {
             calendar += '<tr>';
         }
     }
-    for (var i = DNlast; i < 7; i++) {calendar += '<td>&nbsp;';}
+    for (let i = DNlast; i < 7; i++) {calendar += '<td>&nbsp;';}
     document.querySelector('#' + id + ' tbody').innerHTML = calendar;
-    document.querySelector('#' + id + ' thead td:nth-child(2)').innerHTML = month[D.getMonth()] + ' ' + D.getFullYear();
+    document.querySelector('#' + id + ' thead td:nth-child(2)').innerHTML = `<div>${month[D.getMonth()]}</div>` + ' ' + `<div>${D.getFullYear()}</div>`;
     document.querySelector('#' + id + ' thead td:nth-child(2)').dataset.month = D.getMonth();
     document.querySelector('#' + id + ' thead td:nth-child(2)').dataset.year = D.getFullYear();
     if (document.querySelectorAll('#' + id + ' tbody tr').length < 6) { // чтобы при перелистывании месяцев не "подпрыгивала" вся страница, добавляется ряд пустых клеток. Итог: всегда 6 строк для цифр
@@ -161,43 +164,140 @@ Calendar2("calendar2", new Date().getFullYear(), new Date().getMonth());
 // переключатель минус месяц
 document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(1)').addEventListener("click", () => {
     Calendar2("calendar2", document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month) - 1);
+    getGraphic(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month), "16.1-1");
 });
 
 // переключатель плюс месяц
 document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(3)').addEventListener("click", () => {
     Calendar2("calendar2", document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month) + 1);
+    getGraphic(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month), "16.1-1");
 });
 
+// Что нужно?
+// Функция рендеринга перелистывания и выбора месяцев
+// Функция рендеринга перелистывания и выбора лет
+// Слушатель для каждого дня с модальным окном
 
 
+
+
+
+
+
+
+
+
+function getGraphic(year, month, graphic) { //смены 14.1, 14.2, 16.1-1, 16.1-2, 16.2-1, 16.2-2;
 
 const graphicD = [];
 
-const now = new Date();
-const currentYear = now.getFullYear();
-const currentMonth = now.getMonth();
-const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
-const startDate = new Date("01.01.2000");
-const finishDate = new Date(currentYear, currentMonth, lastDay);
-const firstDate = new Date(currentYear, currentMonth, 1);
+const now = new Date(year, month);
+const currentYear = now.getFullYear(); // Текущий год
+const currentMonth = now.getMonth(); // Текущий месяц
+const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate(); // Последнее число текущего месяца
+const firstDate = new Date(currentYear, currentMonth, 1); // Первая дата месяца
+const finishDate = new Date(currentYear, currentMonth, lastDay); // Последняя дата месяца
 
+let startDate; // Начало отсчёта смен 
+
+
+switch (graphic) {
+
+    case "14.1":
+    case "16.1-2":
+        startDate = new Date("2000/01/04"); 
+        break;
+
+    case "14.2":
+    case "16.2-2":
+        startDate = new Date("2000/01/07");
+        break;
+
+    case "16.1-1":
+        startDate = new Date("2000/01/10"); 
+        break;
+
+    case "16.2-1":
+        startDate = new Date("2000/01/01");
+        break;
+}
+
+
+const dayOff = {
+    type: "day off",
+    worked: false,
+};
+const morningDay = {
+    type: "morning day",
+    worked: true,
+    time: 11.7,
+};
+const nightDay = {
+    type: "night day",
+    worked: true,
+    time: 11,
+};
 
 function daysPlus(date, days) {
     return date.setDate(date.getDate() + days);
 }
 
+function addDay(date, spread) {
+    if (date <= finishDate && date >= firstDate) {
+        const day = {
+            date: new Date(date).toLocaleDateString(),
+            ...spread
+        };
 
-    for (let i = startDate; i < finishDate; daysPlus(i, 3)) {
+        if (new Date(date).toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
 
-        if (i > firstDate) {
-            const day1 = new Date(i).toLocaleDateString();
-            const day2 = new Date(daysPlus(i, 1)).toLocaleDateString();
-            const day3 = new Date(daysPlus(i, 1)).toLocaleDateString();
-            daysPlus(i, 1);
-            graphicD.push(day1);
-            graphicD.push(day2);
-            graphicD.push(day3);
-        }
+        graphicD.push(day);
     }
+}
 
-    // console.log(graphicD);
+ function findStartDate(daysInCycle) {
+
+    for (startDate; startDate < firstDate; daysPlus(startDate, daysInCycle)) {} // Считаем дату начала смен в месяце
+
+    if (startDate.getDate() !== 1) { // откатываем начало смен на прошлый месяц если это не первое число 
+        daysPlus(startDate, -daysInCycle);
+    }
+ }
+
+if (graphic === "14.1" || graphic === "14.2") {
+
+    findStartDate(6);
+
+    for (startDate; startDate <= finishDate; daysPlus(startDate, 1)) {
+        addDay(startDate, morningDay);
+        addDay(daysPlus(startDate, 1), morningDay);
+        addDay(daysPlus(startDate, 1), morningDay);
+        addDay(daysPlus(startDate, 1), dayOff);
+        addDay(daysPlus(startDate, 1), dayOff);
+        addDay(daysPlus(startDate, 1), dayOff);
+    }
+} else {
+
+    findStartDate(12);
+
+    for (startDate; startDate <= finishDate; daysPlus(startDate, 1)) {
+        addDay(startDate, morningDay);
+        addDay(daysPlus(startDate, 1), morningDay);
+        addDay(daysPlus(startDate, 1), morningDay);
+        addDay(daysPlus(startDate, 1), dayOff);
+        addDay(daysPlus(startDate, 1), dayOff);
+        addDay(daysPlus(startDate, 1), dayOff);
+        addDay(daysPlus(startDate, 1), nightDay);
+        addDay(daysPlus(startDate, 1), nightDay);
+        addDay(daysPlus(startDate, 1), nightDay);
+        addDay(daysPlus(startDate, 1), dayOff);
+        addDay(daysPlus(startDate, 1), dayOff);
+        addDay(daysPlus(startDate, 1), dayOff);
+    }
+}
+
+console.log(graphicD);
+}
+
+getGraphic(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
+
