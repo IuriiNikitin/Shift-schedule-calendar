@@ -6,16 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style-2.css">
 </head>
 <body>
-    <div id="calendar"></div>
+    <!-- <div id="calendar"></div> -->
 
-    <table id="calendar2">
-        <thead>
-          <tr><td>‹<td colspan="5"><td>›
-          <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-        <tbody>
-      </table>
+
+
+      <div id="modal_calendar" class="modal show">
+        <div class="modal__dialog">
+            <div class="modal__content">
+                <div class="modal__title">Календарь</div>
+                <div class="modal_data">
+                  <table id="calendar2">
+                    <thead>
+                      <tr><td>‹<td colspan="5"><td>›
+                      <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+                    <tbody>
+                  </table>
+                </div>
+                <div class="modal_message hide"></div>
+                <div data-close class="modal__close">&times;</div>
+            </div>
+        </div>
+    </div>
 
 </body>
 <script src="script.js"></script>

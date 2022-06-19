@@ -152,7 +152,7 @@ function Calendar2(id, year, month) {
     }
     for (let i = DNlast; i < 7; i++) {calendar += '<td>&nbsp;';}
     document.querySelector('#' + id + ' tbody').innerHTML = calendar;
-    document.querySelector('#' + id + ' thead td:nth-child(2)').innerHTML = `<div>${month[D.getMonth()]}</div>` + ' ' + `<div>${D.getFullYear()}</div>`;
+    document.querySelector('#' + id + ' thead td:nth-child(2)').innerHTML = `<div id="calendar_month">${month[D.getMonth()]}</div>` + ' ' + `<div id="calendar_year">${D.getFullYear()}</div>`;
     document.querySelector('#' + id + ' thead td:nth-child(2)').dataset.month = D.getMonth();
     document.querySelector('#' + id + ' thead td:nth-child(2)').dataset.year = D.getFullYear();
     if (document.querySelectorAll('#' + id + ' tbody tr').length < 6) { // чтобы при перелистывании месяцев не "подпрыгивала" вся страница, добавляется ряд пустых клеток. Итог: всегда 6 строк для цифр
@@ -172,6 +172,13 @@ document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(3)').addEv
     Calendar2("calendar2", document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month) + 1);
     getGraphic(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month), "16.1-1");
 });
+
+
+
+
+
+
+
 
 // Что нужно?
 // Функция рендеринга перелистывания и выбора месяцев
