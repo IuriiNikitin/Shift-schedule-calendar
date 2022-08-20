@@ -34,7 +34,7 @@ body {
 .modal__content {
   position: relative;
   margin: auto;
-  padding: 40px;
+  padding: 40px 5px;
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, .2);
   border-radius: 10px;

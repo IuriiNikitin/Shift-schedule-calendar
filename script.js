@@ -69,130 +69,6 @@ function getElement(url, selector, func) {
 }
 
 
-//Calendar
-
-// const calendar = document.getElementById("calendar");
-
-// function createCalendar(elem, year, month) {
- 
-//     let mon = month - 1; // месяцы в JS идут от 0 до 11, а не от 1 до 12
-//     let d = new Date(year, mon);
-   
-//     let table = '<table><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';
-   
-//     // пробелы для первого ряда
-//     // с понедельника до первого дня месяца
-//     // * * * 1  2  3  4
-//     for (let i = 0; i < getDay(d); i++) {
-//       table += '<td></td>';
-//     }
-   
-//     // <td> ячейки календаря с датами
-//     while (d.getMonth() == mon) {
-//       table += '<td>' + d.getDate() + '</td>';
-   
-//       if (getDay(d) % 7 == 6) { // вс, последний день - перевод строки
-//         table += '</tr><tr>';
-//       }
-   
-//       d.setDate(d.getDate() + 1);
-//     }
-   
-//     // добить таблицу пустыми ячейками, если нужно
-//     // 29 30 31 * * * *
-//     if (getDay(d) != 0) {
-//       for (let i = getDay(d); i < 7; i++) {
-//         table += '<td></td>';
-//       }
-//     }
-   
-//     // закрыть таблицу
-//     table += '</tr></table>';
-   
-//     elem.innerHTML = table;
-//   }
-
-//   function getDay(date) { // получить номер дня недели, от 0 (пн) до 6 (вс)
-//     let day = date.getDay();
-//     if (day == 0) {day = 7;} // сделать воскресенье (0) последним днем
-//     return day - 1;
-//   }
-
-
-// const now = new Date();
-// const currentYear = now.getFullYear();
-// const currentMonth = now.getMonth() + 1;
-
-// createCalendar(calendar, currentYear, currentMonth);
-
-
-function Calendar2(id, year, month) {
-    const Dlast = new Date(year, month + 1, 0).getDate(), //последний день в месяце
-        D = new Date(year, month, Dlast), //полная дата последнего числа месяца
-        DNfirst = new Date(D.getFullYear(), D.getMonth(), 1).getDay(), //день недели первого числа
-        DNlast = new Date(D.getFullYear(), D.getMonth(), Dlast).getDay(); //день недели последнего числа
-    let calendar = '<tr>';
-        month = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-
-
-    if (DNfirst != 0) {
-        for (let i = 1; i < DNfirst; i++) {calendar += '<td>';}
-    } else {
-        for (let i = 0; i < 6; i++) {calendar += '<td>';}
-    }
-    for (let i = 1; i <= Dlast; i++) {
-        if (i == new Date().getDate() && D.getFullYear() == new Date().getFullYear() && D.getMonth() == new Date().getMonth()) {
-            calendar += '<td class="today">' + i;
-        } else {
-            calendar += '<td>' + i;
-        }
-        if (new Date(D.getFullYear(), D.getMonth(), i).getDay() == 0) {
-            calendar += '<tr>';
-        }
-    }
-    for (let i = DNlast; i < 7; i++) {calendar += '<td>&nbsp;';}
-    document.querySelector('#' + id + ' tbody').innerHTML = calendar;
-    document.querySelector('#' + id + ' thead td:nth-child(2)').innerHTML = `<div id="calendar_month">${month[D.getMonth()]}</div>` + ' ' + `<div id="calendar_year">${D.getFullYear()}</div>`;
-    document.querySelector('#' + id + ' thead td:nth-child(2)').dataset.month = D.getMonth();
-    document.querySelector('#' + id + ' thead td:nth-child(2)').dataset.year = D.getFullYear();
-    if (document.querySelectorAll('#' + id + ' tbody tr').length < 6) { // чтобы при перелистывании месяцев не "подпрыгивала" вся страница, добавляется ряд пустых клеток. Итог: всегда 6 строк для цифр
-        document.querySelector('#' + id + ' tbody').innerHTML += '<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;';
-    }
-}
-
-Calendar2("calendar2", new Date().getFullYear(), new Date().getMonth());
-// переключатель минус месяц
-document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(1)').addEventListener("click", () => {
-    Calendar2("calendar2", document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month) - 1);
-    getGraphic(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month), "16.1-1");
-});
-
-// переключатель плюс месяц
-document.querySelector('#calendar2 thead tr:nth-child(1) td:nth-child(3)').addEventListener("click", () => {
-    Calendar2("calendar2", document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month) + 1);
-    getGraphic(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.year, parseFloat(document.querySelector('#calendar2 thead td:nth-child(2)').dataset.month), "16.1-1");
-});
-
-
-
-
-
-
-
-
-// Что нужно?
-// Функция рендеринга перелистывания и выбора месяцев
-// Функция рендеринга перелистывания и выбора лет
-// Слушатель для каждого дня с модальным окном
-
-
-
-
-
-
-
-
-
 
 function getGraphic(year, month, graphic) { //смены 14.1, 14.2, 16.1-1, 16.1-2, 16.2-1, 16.2-2;
 
@@ -231,16 +107,16 @@ switch (graphic) {
 
 
 const dayOff = {
-    type: "day off",
+    type: "day-off",
     worked: false,
 };
 const morningDay = {
-    type: "morning day",
+    type: "mdg",
     worked: true,
     time: 11.7,
 };
 const nightDay = {
-    type: "night day",
+    type: "ndg",
     worked: true,
     time: 11,
 };
@@ -253,6 +129,7 @@ function addDay(date, spread) {
     if (date <= finishDate && date >= firstDate) {
         const day = {
             date: new Date(date).toLocaleDateString(),
+            dayWeek: [7, 1, 2, 3, 4, 5, 6][new Date(date).getDay()],
             ...spread
         };
 
@@ -302,9 +179,19 @@ if (graphic === "14.1" || graphic === "14.2") {
         addDay(daysPlus(startDate, 1), dayOff);
     }
 }
-
-console.log(graphicD);
+// console.log(graphicD);
+// console.log(graphicD.filter(day => day.type === "mdg").reduce((sum, current) => {return sum + current.time}, 0));
+return graphicD;
 }
 
 getGraphic(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
 
+// Что нужно?
+// Функция рендеринга перелистывания и выбора месяцев
+// Функция рендеринга перелистывания и выбора лет
+// Слушатель для каждого дня с модальным окном
+
+function renderCalendar() {
+    const calendar = document.getElementById("calendar");
+    const graphic = getGraphic(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
+}

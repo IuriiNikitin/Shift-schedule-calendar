@@ -1,74 +1,32 @@
-
-
-/* table {
-    border-collapse: collapse;
-    width: 300px;
-    height: 300px;
-  }
-
-tbody {
-    background-color:white;
+#calendar {
+  margin: auto;
+  width: 100%;
+  border-collapse:collapse;
 }
 
-td, th {
-    border: 1px solid black;
-    padding: 3px;
-    text-align: right;
-    vertical-align: top;
-  }
-   
-th {
-    height: 10px;
-    text-align: center;
-    vertical-align:middle;
-    font-weight: bold;
-    background-color: #E6E6E6;
-}
- */
-
-
-#calendar2 {
-    margin: auto;
-    max-width: 400px;
-    width: 100%;
-    height: 300px;
-    font-family: sans-serif;
-    line-height: 1.2em;
-    font-size: 15px;
-    text-align: center;
-    background-color:white;
-  }
-  #calendar2 thead tr:last-child {
-    font-size: small;
-    color: rgb(85, 85, 85);
-  }
-  #calendar2 thead tr:nth-child(1) td:nth-child(2) {
-    color: rgb(50, 50, 50);
-  }
-  #calendar2 thead tr:nth-child(1) td:nth-child(1):hover, #calendar2 thead tr:nth-child(1) td:nth-child(3):hover {
-    cursor: pointer;
-  }
-  #calendar2 tbody td {
-    color: rgb(44, 86, 122);
-  }
-  #calendar2 tbody td:nth-child(n+6), #calendar2 .holiday {
-    color: rgb(231, 140, 92);
-  }
-  #calendar2 tbody td.today {
-    background: rgb(220, 0, 0);
-    color: #fff;
-  }
-
-
-#calendar2 thead tr:first-child {
-  height: 40px;
+#calendar td {
+  position: relative;
+  width: calc(100%/7);
+  height: 61.5px;
+  font-size: 9pt;
 }
 
-#calendar2 #calendar_month,#calendar_year {
-display: inline;
-margin: 10px;
-padding: 5px;
-border: solid 1px black;
-border-radius:6px;
-cursor: pointer;
+#calendar .cal-mdg {
+  background-color :#fff56d;
+  border: 1px solid gray;
+}
+
+#calendar .cal-ndg {
+  background-color :#6b6cb2;
+  border: 1px solid gray;
+}
+
+#calendar .day-off {
+  border: 1px solid gray;
+}
+
+#calendar td div:first-child {
+  position: absolute;
+  top: 3px;
+  right: 3px;
 }
