@@ -108,15 +108,18 @@ switch (graphic) {
 
 const dayOff = {
     type: "day-off",
+    name: "Выход",
     worked: false,
 };
 const morningDay = {
-    type: "mdg",
+    type: "cal-mdg",
+    name: "День",
     worked: true,
     time: 11.7,
 };
 const nightDay = {
-    type: "ndg",
+    type: "cal-ndg",
+    name: "Ночь",
     worked: true,
     time: 11,
 };
@@ -179,19 +182,178 @@ if (graphic === "14.1" || graphic === "14.2") {
         addDay(daysPlus(startDate, 1), dayOff);
     }
 }
-// console.log(graphicD);
+
 // console.log(graphicD.filter(day => day.type === "mdg").reduce((sum, current) => {return sum + current.time}, 0));
+// console.log(graphicD);
+
 return graphicD;
 }
 
-getGraphic(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
+// getGraphic(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
 
-// Что нужно?
-// Функция рендеринга перелистывания и выбора месяцев
-// Функция рендеринга перелистывания и выбора лет
-// Слушатель для каждого дня с модальным окном
+function getMonths() {
+    return ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+}
 
-function renderCalendar() {
-    const calendar = document.getElementById("calendar");
-    const graphic = getGraphic(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
+function renderCalendar(year, month, graphic, id = "calendar") {
+
+    const months = getMonths();
+    if(month < 0) {month = 11; year -= 1;};
+    if(month > 11) {month = 0; year += 1;};
+
+    document.getElementById(id).innerHTML = `
+    <thead>
+        <tr>
+            <th colspan="2">‹</th>
+            <th colspan="3">
+                <div>
+                    <button>${months[month]}</button>
+                    <button>${year}</button>
+                </div>
+            </th>
+            <th colspan="2">›</th>
+        </tr>
+        <tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>
+    </thead>`;
+    
+
+    const days = getGraphic(year, month, graphic);
+
+    let calendar = "<tbody><tr>";
+
+    if(days[0].dayWeek !== 1) { //Добавляем пустые столбцы в начале, если это не понедельник
+        for(let i = 1; i < days[0].dayWeek; i++) {
+            calendar += "<td>";
+        }
+    }
+
+    for(let i = 0; i < days.length; i++) {
+
+        let clazz = days[i].type;
+        const num = i + 1;
+        const name = days[i].name;
+        if(days[i].today) {clazz += " today"}
+
+        calendar += `<td class="${clazz}"><div>${num}</div><div>${name}`;
+
+        if(days[i].dayWeek === 7) {calendar += "<tr>"}
+
+    }
+
+    document.getElementById(id).innerHTML += calendar;
+
+    document.getElementById(id).querySelectorAll("th")[0].addEventListener("click", () => {
+        renderCalendar(+year, month - 1, graphic);
+    });
+    document.getElementById(id).querySelectorAll("th")[2].addEventListener("click", () => {
+        renderCalendar(+year, month + 1, graphic);
+    });
+    document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
+        renderMonths();
+    });
+    document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
+        renderYears(+year);
+    });
+}
+
+renderCalendar(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
+
+function getMonth(id = "calendar") {
+    const months = getMonths();
+    const month = document.getElementById(id).querySelectorAll("button")[0].innerText;
+    
+    return months.findIndex(i => i === month);
+}
+
+function getYear(id = "calendar") {
+    const year = document.getElementById(id).querySelectorAll("button")[1].innerText;
+    return +year;
+}
+
+
+
+
+function renderTableHeader(id = "calendar") {
+
+    const months = getMonths();
+    const month = months[getMonth()];
+    const year = getYear();
+
+    document.getElementById(id).innerHTML = `
+    <thead>
+        <tr>
+            <th>‹</th>
+            <th>
+                <div>
+                    <button>${month}</button>
+                    <button>${year}</button>
+                </div>
+            </th>
+            <th>›</th>
+        </tr>
+    </thead>`;
+
+}
+
+
+
+
+function renderYears(year, id = "calendar") {
+    
+    renderTableHeader();
+    let calendar = "<tbody><tr>";
+    const startYear = year - 8;
+
+    for(let i = 1; i <= 15; i++) {
+        calendar += `<td class="year">${startYear + i}`
+        if(!(i % 3)){calendar += "<tr>"}
+    }
+
+    document.getElementById(id).innerHTML += calendar;
+
+    document.getElementById(id).querySelectorAll(".year").forEach((year) => {
+        year.addEventListener("click", (e) => {
+            renderCalendar(e.target.innerText, getMonth(), "16.1-1");
+        });
+    });
+
+    document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
+        renderMonths();
+    });
+    document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
+        renderCalendar(getYear(), getMonth(), "16.1-1");
+    });
+    document.getElementById(id).querySelectorAll("th")[0].addEventListener("click", () => {
+        renderYears(+year - 15);
+    });
+    document.getElementById(id).querySelectorAll("th")[2].addEventListener("click", () => {
+        renderYears(+year + 15);
+    });
+}
+
+function renderMonths(id = "calendar") {
+
+    renderTableHeader();
+    const months = getMonths();
+    let calendar = "<tbody><tr>";
+
+    for(let i = 1; i <= 12; i++) {
+        calendar += `<td class="month">${months[i - 1]}`
+        if(!(i % 3)){calendar += "<tr>"}
+    }
+
+    document.getElementById(id).innerHTML += calendar;
+
+    document.getElementById(id).querySelectorAll(".month").forEach((month, num) => {
+        month.addEventListener("click", () => {
+            renderCalendar(getYear(), num, "16.1-1");
+        });
+    });
+
+    document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
+        renderCalendar(getYear(), getMonth(), "16.1-1");
+    });
+    document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
+        renderYears(getYear());
+    });
 }
