@@ -14,20 +14,24 @@
 #calendar .cal-mdg {
   background-color :#fff56d;
   border: 1px solid gray;
+  background-clip:padding-box;
 }
 
 #calendar .cal-ndg {
   background-color :#6b6cb2;
   border: 1px solid gray;
+  background-clip:padding-box;
 }
 
 #calendar .day-off {
   border: 1px solid gray;
+  background-clip:padding-box;
 }
 
 #calendar .today {
-  outline: 2px solid gray;
+  outline: 2px solid black;
   outline-offset:-2px;
+  background-clip:padding-box;
 }
 
 #calendar td div:first-child {
