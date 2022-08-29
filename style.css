@@ -51,11 +51,30 @@
 
 #calendar button {
   cursor: pointer;
+  font-weight: bold;
 }
 
-#calendar tr:nth-child(1) th:nth-child(1) {
-  cursor: pointer;
+/* #calendar tr:nth-child(1) th:nth-child(1) {
 }
 #calendar tr:nth-child(1) th:nth-child(3) {
+} */
+
+#calendar .arrow_wrapper {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+#calendar .arrow {
   cursor:pointer;
+  height: 20px;
+}
+
+#calendar .icons {
+  position: absolute;
+  bottom: 3px;
+}
+#calendar .icons img {
+  width: 8px;
+  margin: 0 3px;
 }

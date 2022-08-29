@@ -124,6 +124,43 @@ const nightDay = {
     time: 11,
 };
 
+
+
+async function getHolidays() {
+    let response = await fetch("./holidays.json");
+    let holidays = await response.json();
+
+    return holidays;
+}
+
+function findHolidays(number, month, func) {
+    month += 1;
+    if(month < 10) {month = "0" + month};
+    if(number < 10) {number = "0" + number};
+    const date = number + "." + month;
+
+    getHolidays()
+    .then(data => {
+        data.forEach(item => {
+            if(typeof(item.date) === "object") {
+                if((item.date.findIndex(i => i === date)) + 1) {
+                    func(item.descr);
+                }
+            } else if(item.date === date) {
+                func(item.descr);
+            }
+        })
+        console.log("праздничные дни получены");
+    })
+    .catch(
+        console.log("Не удалось получить список праздничных дней")
+    )
+
+}
+
+
+
+
 function daysPlus(date, days) {
     return date.setDate(date.getDate() + days);
 }
@@ -131,12 +168,48 @@ function daysPlus(date, days) {
 function addDay(date, spread) {
     if (date <= finishDate && date >= firstDate) {
         const day = {
-            date: new Date(date).toLocaleDateString(),
-            dayWeek: [7, 1, 2, 3, 4, 5, 6][new Date(date).getDay()],
+            date: {
+                full: new Date(date),
+                short: new Date(date).toLocaleDateString(),
+                number: new Date(date).getDate(),
+                month: new Date(date).getMonth(),
+                year: new Date(date).getFullYear(),
+                dayWeek: [7, 1, 2, 3, 4, 5, 6][new Date(date).getDay()],
+            },
+
             ...spread
         };
 
-        if (new Date(date).toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
+        const {short, number, dayWeek, month, year} = day.date;
+        if (short === new Date().toLocaleDateString()) { day.today = true; }
+
+        findHolidays(number, month, (descr) => {
+            day.holiday = true;
+            day.descr = descr;
+        });
+
+        if (dayWeek !== 6 && dayWeek !== 7) {
+            if (number === 15) { day.salary = true; }; // зарплата 15 если это не сб или вс
+            if (number === 30 && month !== 11) { day.salary = true; }; // аванс 30 если это не сб или вс и не декабрь
+        }
+        if (month === 1) {
+            if (dayWeek === 5) {
+                if (number === 26 && year % 4) { day.salary = true; }; // в феврале аванс 26 если это пятница и не високосный год
+                if (number === 27) { day.salary = true; }; // в феврале аванс 27  если это пятница
+            }
+            if (dayWeek !== 6 && dayWeek !== 7) {
+                if (number === 28 && year % 4 ) { day.salary = true; }; // в феврале аванс 28  если это не сб или вс и не високосный
+                if (number === 29 && !(year % 4) ) { day.salary = true; }; // в феврале аванс 29  если это не сб или вс и високосный
+            }
+        }
+        if (month === 11) {
+            if (number === 29 && dayWeek !== 6 && dayWeek !== 7) { day.salary = true; }; // в декабре аванс 29 если это не сб или вс
+            if (number === 27 && dayWeek === 5) { day.salary = true; };// если 27 это пт в декабре то аванс в этот день
+        }
+        if (dayWeek === 5) {
+            if (number === 13 || number === 14) { day.salary = true; }; // если 13 или 14 это пт то зп в это день
+            if (number === 28 || number === 29) { day.salary = true; };// если 28 или 29 это пт то аванс в этот день
+        }
 
         graphicD.push(day);
     }
@@ -184,7 +257,7 @@ if (graphic === "14.1" || graphic === "14.2") {
 }
 
 // console.log(graphicD.filter(day => day.type === "mdg").reduce((sum, current) => {return sum + current.time}, 0));
-// console.log(graphicD);
+console.log(graphicD);
 
 return graphicD;
 }
@@ -204,14 +277,22 @@ function renderCalendar(year, month, graphic, id = "calendar") {
     document.getElementById(id).innerHTML = `
     <thead>
         <tr>
-            <th colspan="2">‹</th>
+            <th colspan="2">
+                <div class="arrow_wrapper">
+                    <img class="arrow" src="./img/left.svg" alt="left">
+                </div>
+            </th>
             <th colspan="3">
                 <div>
                     <button>${months[month]}</button>
                     <button>${year}</button>
                 </div>
             </th>
-            <th colspan="2">›</th>
+            <th colspan="2">
+                <div class="arrow_wrapper">
+                    <img class="arrow" src="./img/right.svg" alt="right">
+                </div>
+            </th>
         </tr>
         <tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>
     </thead>`;
@@ -221,8 +302,8 @@ function renderCalendar(year, month, graphic, id = "calendar") {
 
     let calendar = "<tbody><tr>";
 
-    if(days[0].dayWeek !== 1) { //Добавляем пустые столбцы в начале, если это не понедельник
-        for(let i = 1; i < days[0].dayWeek; i++) {
+    if(days[0].date.dayWeek !== 1) { //Добавляем пустые столбцы в начале, если это не понедельник
+        for(let i = 1; i < days[0].date.dayWeek; i++) {
             calendar += "<td>";
         }
     }
@@ -230,22 +311,25 @@ function renderCalendar(year, month, graphic, id = "calendar") {
     for(let i = 0; i < days.length; i++) {
 
         let clazz = days[i].type;
-        const num = i + 1;
+        let icons = "<div class='icons'>"
+        const num = days[i].date.number;
         const name = days[i].name;
-        if(days[i].today) {clazz += " today"}
+        if(days[i].today) {clazz += " today"};
+        if(days[i].salary) {icons += "<img src='./img/rouble.svg' alt='rouble'>"};
 
-        calendar += `<td class="${clazz}"><div>${num}</div><div>${name}`;
+        calendar += `<td class="${clazz}"><div>${num}</div><div>${name}</div>`;
 
-        if(days[i].dayWeek === 7) {calendar += "<tr>"}
+        if(days[i].salary) {calendar += icons}
+        if(days[i].date.dayWeek === 7) {calendar += "<tr>"}
 
     }
 
     document.getElementById(id).innerHTML += calendar;
 
-    document.getElementById(id).querySelectorAll("th")[0].addEventListener("click", () => {
+    document.getElementById(id).querySelectorAll(".arrow")[0].addEventListener("click", () => {
         renderCalendar(+year, month - 1, graphic);
     });
-    document.getElementById(id).querySelectorAll("th")[2].addEventListener("click", () => {
+    document.getElementById(id).querySelectorAll(".arrow")[1].addEventListener("click", () => {
         renderCalendar(+year, month + 1, graphic);
     });
     document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
@@ -282,14 +366,22 @@ function renderTableHeader(id = "calendar") {
     document.getElementById(id).innerHTML = `
     <thead>
         <tr>
-            <th>‹</th>
+            <th>
+                <div class="arrow_wrapper">
+                    <img class="arrow" src="./img/left.svg" alt="left">
+                </div>
+            </th>
             <th>
                 <div>
                     <button>${month}</button>
                     <button>${year}</button>
                 </div>
             </th>
-            <th>›</th>
+            <th>
+                <div class="arrow_wrapper">
+                    <img class="arrow" src="./img/right.svg" alt="right">
+                </div>
+            </th>
         </tr>
     </thead>`;
 
@@ -323,10 +415,10 @@ function renderYears(year, id = "calendar") {
     document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
         renderCalendar(getYear(), getMonth(), "16.1-1");
     });
-    document.getElementById(id).querySelectorAll("th")[0].addEventListener("click", () => {
+    document.getElementById(id).querySelectorAll(".arrow")[0].addEventListener("click", () => {
         renderYears(+year - 15);
     });
-    document.getElementById(id).querySelectorAll("th")[2].addEventListener("click", () => {
+    document.getElementById(id).querySelectorAll(".arrow")[1].addEventListener("click", () => {
         renderYears(+year + 15);
     });
 }
