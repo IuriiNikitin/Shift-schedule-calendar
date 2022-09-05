@@ -67,14 +67,93 @@
 
 #calendar .arrow {
   cursor:pointer;
-  height: 20px;
+  height: 15px;
 }
 
 #calendar .icons {
+  display: flex;
   position: absolute;
-  bottom: 3px;
+  bottom: 4px;
+  left: 2px;
 }
 #calendar .icons img {
-  width: 8px;
-  margin: 0 3px;
+  height: 12px;
+  margin: 0 2px;
+}
+#graphic {
+  margin: 20px 0;
+}
+
+.day_menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+
+}
+
+.day_menu_content {
+  position: relative;
+  box-sizing:border-box;
+  padding: 15px;
+  background-color:white;
+  width: 90%;
+  min-height: 300px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.day_menu_close {
+  position: absolute;
+  top: 0px;
+  right: 9px;
+  font-size: 30px;
+  color: #000;
+  opacity: .5;
+  font-weight: 700;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.day_menu_data {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.day_menu_data>div {
+  margin: 8px 0;
+  text-align: left;
+}
+
+.day_menu_data .day_type_wrapper select[name="day_type"] {
+  width: 100%;
+  outline: none;
+  border: none;
+  background-color:transparent;
+}
+
+
+
+.day_menu_data .note textarea {
+  box-sizing:border-box;
+  width: 100%;
+  height: 70px;
+  resize: none;
+}
+
+.day_menu_data .holiday_checkbox {
+  display: flex;
+  align-items:center;
+}
+
+.day_menu_data .holiday_checkbox input {
+  margin-left: 0;
 }

@@ -14,7 +14,51 @@
             <div class="modal__content">
                 <div class="modal__title">Календарь</div>
                 <div class="modal_data">
+                    <select name="graphic" id="graphic">
+                        <option value="14.1">График 14 смена 1</option>
+                        <option value="14.2">График 14 смена 2</option>
+                        <option selected value="16.1-1">График 16 смена 1-1</option>
+                        <option value="16.1-2">График 16 смена 1-2</option>
+                        <option value="16.2-1">График 16 смена 2-1</option>
+                        <option value="16.2-2">График 16 смена 2-2</option>
+                    </select>
                   <table id="calendar"></table>
+                  <div class="day_menu">
+                    <div class="day_menu_content">
+                        <div class="day_menu_title">
+                            <div class="day_date">02 Сент 2022 (Пт)</div>
+                        </div>
+                        <div class="day_menu_data">
+                            <div class="day_type_wrapper">
+                                <div><small><small>смена</small></small></div>
+                                <select name="day_type">
+                                    <option value="day-off" selected>Выходной день</option>
+                                    <option value="omd">Сверхурочная дневная смена</option>
+                                    <option value="ond">Сверхурочная ночная смена</option>
+                                </select>
+                            </div>
+    
+                            <div class="graphic_time">
+                                <div><small><small>часы по графику</small></small></div>
+                                <div>07:20-20:00 (11ч42м)</div>
+                            </div>
+                            <div class="worked_time">
+                                <div><small><small>отработанное время</small></small></div>
+                                <div>07:20-20:00 (11ч42м)</div>
+                            </div>
+                            <div class="holiday_checkbox">
+                                <input type="checkbox">
+                                <div>Праздничный день</div>
+                            </div>
+                            <div class="note">
+                                <div><small><small>Заметки</small></small></div>
+                                <textarea></textarea>
+                            </div>
+                        </div>
+
+                        <div data-close class="day_menu_close">&times;</div>
+                    </div>
+                  </div>
                 </div>
                 <div class="modal_message hide"></div>
                 <div data-close class="modal__close">&times;</div>
@@ -23,5 +67,5 @@
     </div>
 
 </body>
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 </html>

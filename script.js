@@ -1,72 +1,8 @@
-"use_strict";
+"use strict";
 
+import holidays from "./holidays.js";
 
-//max incomes
-let maxIncomes = {
-    '01.01.2009':'415000',
-    '01.01.2010':'415000',
-    '01.01.2011':'463000',
-    '01.01.2012':'512000',
-    '01.01.2013':'568000',
-    '01.01.2014':'624000',
-    '01.01.2015':'670000',
-    '01.01.2016':'718000',
-    '01.01.2017':'755000',
-    '01.01.2018':'815000',
-    '01.01.2019':'865000',
-    '01.01.2020':'912000',
-    '01.01.2021':'966000',
-    '01.01.2022':'1032000'
-};
-
-function getMaxIncomes() {
-    
-    getElement("https://portal.fss.ru/fss/sicklist/guest","script", function(element) {
-
-        const maxIncomesObj = {};
-        let scriptIndex;
-
-        for(let i = 0; i < element.length; i++) {
-            if(element[i].innerHTML.includes("maxIncomes = ")) { //находим номер скрипта с нужным значением
-               scriptIndex = i;
-            }
-        }
-
-        const maxIncomesPosition = element[scriptIndex].innerHTML.indexOf("maxIncomes = ");
-        const maxIncomesString = element[scriptIndex].innerHTML.slice(maxIncomesPosition + "maxIncomes = ".length);
-        const maxIncomesArray = maxIncomesString.match(/'\d{2}\.\d{2}\.\d{4}':'\d{5,}'/igm);
-
-
-
-        maxIncomesArray.forEach(element => {
-            element = element.split(":");
-            const date = element[0].slice(1,-1);
-            const money = element[1].slice(1, -1);
-            maxIncomesObj[date] = money;
-        });
-
-        console.log(maxIncomesObj);
-        // return maxIncomesObj;
-    });
-}
-
-// https://api.allorigins.win/get?url=
-// http://alloworigin.com/get?url=
-
-function getElement(url, selector, func) {
-    fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`)
-    .then(response => {
-      if (response.ok) {return response.text();}
-      throw new Error('Network response was not ok.');
-    })
-    .then(data => {
-        // console.log(data);
-        data =  data.replace(/src=/gmi, ""); //убираем лишние ссылки
-        const html = document.createElement("div");
-        html.innerHTML = data;
-        func(html.querySelectorAll(selector));
-        });
-}
+const graphic = document.getElementById("graphic");
 
 
 
@@ -107,31 +43,27 @@ switch (graphic) {
 
 
 const dayOff = {
-    type: "day-off",
+    actualType: "day-off",
+    graphicType:"day-off",
     name: "Выход",
-    worked: false,
+    descr: "Выходной день",
 };
 const morningDay = {
-    type: "cal-mdg",
+    actualType: "cal-mdg",
+    graphicType:"cal-mdg",
     name: "День",
+    descr: "Дневная смена",
     worked: true,
     time: 11.7,
 };
 const nightDay = {
-    type: "cal-ndg",
+    actualType: "cal-ndg",
+    graphicType:"cal-ndg",
     name: "Ночь",
+    descr: "Ночная смена",
     worked: true,
     time: 11,
 };
-
-
-
-async function getHolidays() {
-    let response = await fetch("./holidays.json");
-    let holidays = await response.json();
-
-    return holidays;
-}
 
 function findHolidays(number, month, func) {
     month += 1;
@@ -139,26 +71,16 @@ function findHolidays(number, month, func) {
     if(number < 10) {number = "0" + number};
     const date = number + "." + month;
 
-    getHolidays()
-    .then(data => {
-        data.forEach(item => {
-            if(typeof(item.date) === "object") {
-                if((item.date.findIndex(i => i === date)) + 1) {
-                    func(item.descr);
-                }
-            } else if(item.date === date) {
-                func(item.descr);
+    holidays.forEach(item => {
+        if(typeof(item.date) === "object") {
+            if((item.date.findIndex(i => i === date)) + 1) {
+                func(item.annotation);
             }
-        })
-        console.log("праздничные дни получены");
+        } else if(item.date === date) {
+            func(item.annotation);
+        }
     })
-    .catch(
-        console.log("Не удалось получить список праздничных дней")
-    )
-
 }
-
-
 
 
 function daysPlus(date, days) {
@@ -183,9 +105,9 @@ function addDay(date, spread) {
         const {short, number, dayWeek, month, year} = day.date;
         if (short === new Date().toLocaleDateString()) { day.today = true; }
 
-        findHolidays(number, month, (descr) => {
+        findHolidays(number, month, (annotation) => {
             day.holiday = true;
-            day.descr = descr;
+            day.annotation = annotation;
         });
 
         if (dayWeek !== 6 && dayWeek !== 7) {
@@ -256,7 +178,7 @@ if (graphic === "14.1" || graphic === "14.2") {
     }
 }
 
-// console.log(graphicD.filter(day => day.type === "mdg").reduce((sum, current) => {return sum + current.time}, 0));
+// console.log(graphicD.filter(day => day.actualType === "mdg").reduce((sum, current) => {return sum + current.time}, 0));
 console.log(graphicD);
 
 return graphicD;
@@ -310,16 +232,17 @@ function renderCalendar(year, month, graphic, id = "calendar") {
 
     for(let i = 0; i < days.length; i++) {
 
-        let clazz = days[i].type;
+        let clazz = days[i].actualType;
         let icons = "<div class='icons'>"
         const num = days[i].date.number;
         const name = days[i].name;
         if(days[i].today) {clazz += " today"};
         if(days[i].salary) {icons += "<img src='./img/rouble.svg' alt='rouble'>"};
+        if(days[i].holiday) {icons += "<img src='./img/holiday.svg' alt='holiday'>"};
 
         calendar += `<td class="${clazz}"><div>${num}</div><div>${name}</div>`;
 
-        if(days[i].salary) {calendar += icons}
+        if(days[i].salary || days[i].holiday) {calendar += icons}
         if(days[i].date.dayWeek === 7) {calendar += "<tr>"}
 
     }
@@ -340,7 +263,7 @@ function renderCalendar(year, month, graphic, id = "calendar") {
     });
 }
 
-renderCalendar(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
+renderCalendar(new Date().getFullYear(), new Date().getMonth(), graphic.value);
 
 function getMonth(id = "calendar") {
     const months = getMonths();
@@ -405,7 +328,7 @@ function renderYears(year, id = "calendar") {
 
     document.getElementById(id).querySelectorAll(".year").forEach((year) => {
         year.addEventListener("click", (e) => {
-            renderCalendar(e.target.innerText, getMonth(), "16.1-1");
+            renderCalendar(e.target.innerText, getMonth(), graphic.value);
         });
     });
 
@@ -413,7 +336,7 @@ function renderYears(year, id = "calendar") {
         renderMonths();
     });
     document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
-        renderCalendar(getYear(), getMonth(), "16.1-1");
+        renderCalendar(getYear(), getMonth(), graphic.value);
     });
     document.getElementById(id).querySelectorAll(".arrow")[0].addEventListener("click", () => {
         renderYears(+year - 15);
@@ -438,14 +361,18 @@ function renderMonths(id = "calendar") {
 
     document.getElementById(id).querySelectorAll(".month").forEach((month, num) => {
         month.addEventListener("click", () => {
-            renderCalendar(getYear(), num, "16.1-1");
+            renderCalendar(getYear(), num, graphic.value);
         });
     });
 
     document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
-        renderCalendar(getYear(), getMonth(), "16.1-1");
+        renderCalendar(getYear(), getMonth(), graphic.value);
     });
     document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
         renderYears(getYear());
     });
 }
+
+graphic.addEventListener("change", (e) => {
+    renderCalendar(getYear(), getMonth(), e.target.value);
+});

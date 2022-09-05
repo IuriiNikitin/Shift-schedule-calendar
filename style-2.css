@@ -24,8 +24,6 @@ body {
 .modal__dialog {
   max-width: 350px;
   min-width: 300px;
-  width: 95%;
-
   margin-left: auto;
   margin-right: auto;
 
@@ -36,7 +34,9 @@ body {
   margin: auto;
   padding: 40px 5px;
   background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, .2);
+  /* border: 1px solid rgba(0, 0, 0, .2); */
+  outline: 1px solid rgba(0, 0, 0, .2);
+  outline-offset: -1px;
   border-radius: 10px;
   overflow-y: auto;
 }
