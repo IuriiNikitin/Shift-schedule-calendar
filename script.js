@@ -54,15 +54,18 @@ const morningDay = {
     name: "День",
     descr: "Дневная смена",
     worked: true,
-    time: 11.7,
+    shiftTime:["07:20", "20:00"],
+    breakTime: [["11:30", "12:10"], ["16:00", "16:18"]],
 };
+
 const nightDay = {
     actualType: "cal-ndg",
     graphicType:"cal-ndg",
     name: "Ночь",
     descr: "Ночная смена",
     worked: true,
-    time: 11,
+    shiftTime:["20:00", "07:30"],
+    breakTime: ["00:00", "00:30"],
 };
 
 function findHolidays(number, month, func) {
@@ -90,20 +93,24 @@ function daysPlus(date, days) {
 function addDay(date, spread) {
     if (date <= finishDate && date >= firstDate) {
         const day = {
-            date: {
-                full: new Date(date),
-                short: new Date(date).toLocaleDateString(),
-                number: new Date(date).getDate(),
-                month: new Date(date).getMonth(),
-                year: new Date(date).getFullYear(),
-                dayWeek: [7, 1, 2, 3, 4, 5, 6][new Date(date).getDay()],
-            },
 
-            ...spread
+            date:new Date(date),
+            dayWeek: [7, 1, 2, 3, 4, 5, 6][new Date(date).getDay()],
+
+            ...spread,
         };
 
-        const {short, number, dayWeek, month, year} = day.date;
-        if (short === new Date().toLocaleDateString()) { day.today = true; }
+
+
+// console.log(new Date(new Date(date).setHours(20,[17])));
+
+
+        const {dayWeek} = day;
+        const number = day.date.getDate();
+        const month = day.date.getMonth();
+        const year = day.date.getFullYear();
+
+        if (day.date.toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
 
         findHolidays(number, month, (annotation) => {
             day.holiday = true;
@@ -196,36 +203,19 @@ function renderCalendar(year, month, graphic, id = "calendar") {
     if(month < 0) {month = 11; year -= 1;};
     if(month > 11) {month = 0; year += 1;};
 
-    document.getElementById(id).innerHTML = `
-    <thead>
-        <tr>
-            <th colspan="2">
-                <div class="arrow_wrapper">
-                    <img class="arrow" src="./img/left.svg" alt="left">
-                </div>
-            </th>
-            <th colspan="3">
-                <div>
-                    <button>${months[month]}</button>
-                    <button>${year}</button>
-                </div>
-            </th>
-            <th colspan="2">
-                <div class="arrow_wrapper">
-                    <img class="arrow" src="./img/right.svg" alt="right">
-                </div>
-            </th>
-        </tr>
-        <tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>
-    </thead>`;
+    let header = getTableHeader(months[month], year, [2, 3, 2]);
+    header += "<tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>";
+
+
+    document.getElementById(id).innerHTML = header;
     
 
     const days = getGraphic(year, month, graphic);
 
     let calendar = "<tbody><tr>";
 
-    if(days[0].date.dayWeek !== 1) { //Добавляем пустые столбцы в начале, если это не понедельник
-        for(let i = 1; i < days[0].date.dayWeek; i++) {
+    if(days[0].dayWeek !== 1) { //Добавляем пустые столбцы в начале, если это не понедельник
+        for(let i = 1; i < days[0].dayWeek; i++) {
             calendar += "<td>";
         }
     }
@@ -234,7 +224,7 @@ function renderCalendar(year, month, graphic, id = "calendar") {
 
         let clazz = days[i].actualType;
         let icons = "<div class='icons'>"
-        const num = days[i].date.number;
+        const num = days[i].date.getDate();
         const name = days[i].name;
         if(days[i].today) {clazz += " today"};
         if(days[i].salary) {icons += "<img src='./img/rouble.svg' alt='rouble'>"};
@@ -243,7 +233,7 @@ function renderCalendar(year, month, graphic, id = "calendar") {
         calendar += `<td class="${clazz}"><div>${num}</div><div>${name}</div>`;
 
         if(days[i].salary || days[i].holiday) {calendar += icons}
-        if(days[i].date.dayWeek === 7) {calendar += "<tr>"}
+        if(days[i].dayWeek === 7) {calendar += "<tr>"}
 
     }
 
@@ -281,33 +271,35 @@ function getYear(id = "calendar") {
 
 
 function renderTableHeader(id = "calendar") {
-
+    
     const months = getMonths();
     const month = months[getMonth()];
     const year = getYear();
+    const header = getTableHeader(month, year);
 
-    document.getElementById(id).innerHTML = `
-    <thead>
-        <tr>
-            <th>
-                <div class="arrow_wrapper">
-                    <img class="arrow" src="./img/left.svg" alt="left">
-                </div>
-            </th>
-            <th>
-                <div>
-                    <button>${month}</button>
-                    <button>${year}</button>
-                </div>
-            </th>
-            <th>
-                <div class="arrow_wrapper">
-                    <img class="arrow" src="./img/right.svg" alt="right">
-                </div>
-            </th>
-        </tr>
-    </thead>`;
+    document.getElementById(id).innerHTML = header;
+}
 
+function getTableHeader(month, year, colspan = [0, 0, 0]) {
+    return `<thead>
+    <tr>
+        <th colspan="${colspan[0]}">
+            <div class="arrow_wrapper">
+                <img class="arrow" src="./img/left.svg" alt="left">
+            </div>
+        </th>
+        <th colspan="${colspan[1]}">
+            <div>
+                <button>${month}</button>
+                <button>${year}</button>
+            </div>
+        </th>
+        <th colspan="${colspan[2]}">
+            <div class="arrow_wrapper">
+                <img class="arrow" src="./img/right.svg" alt="right">
+            </div>
+        </th>
+    </tr>`;
 }
 
 
