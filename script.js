@@ -1,6 +1,7 @@
 "use strict";
 
-import holidays from "./holidays.js";
+import findSalary from "./find-salary.js";
+import findHolidays from "./find-holidays.js";
 
 const graphic = document.getElementById("graphic");
 
@@ -41,13 +42,13 @@ switch (graphic) {
         break;
 }
 
-
 const dayOff = {
     actualType: "day-off",
     graphicType:"day-off",
     name: "Выход",
     descr: "Выходной день",
 };
+
 const morningDay = {
     actualType: "cal-mdg",
     graphicType:"cal-mdg",
@@ -68,23 +69,6 @@ const nightDay = {
     breakTime: ["00:00", "00:30"],
 };
 
-function findHolidays(number, month, func) {
-    month += 1;
-    if(month < 10) {month = "0" + month};
-    if(number < 10) {number = "0" + number};
-    const date = number + "." + month;
-
-    holidays.forEach(item => {
-        if(typeof(item.date) === "object") {
-            if((item.date.findIndex(i => i === date)) + 1) {
-                func(item.annotation);
-            }
-        } else if(item.date === date) {
-            func(item.annotation);
-        }
-    })
-}
-
 
 function daysPlus(date, days) {
     return date.setDate(date.getDate() + days);
@@ -100,45 +84,12 @@ function addDay(date, spread) {
             ...spread,
         };
 
-
-
 // console.log(new Date(new Date(date).setHours(20,[17])));
-
-
-        const {dayWeek} = day;
-        const number = day.date.getDate();
-        const month = day.date.getMonth();
-        const year = day.date.getFullYear();
 
         if (day.date.toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
 
-        findHolidays(number, month, (annotation) => {
-            day.holiday = true;
-            day.annotation = annotation;
-        });
-
-        if (dayWeek !== 6 && dayWeek !== 7) {
-            if (number === 15) { day.salary = true; }; // зарплата 15 если это не сб или вс
-            if (number === 30 && month !== 11) { day.salary = true; }; // аванс 30 если это не сб или вс и не декабрь
-        }
-        if (month === 1) {
-            if (dayWeek === 5) {
-                if (number === 26 && year % 4) { day.salary = true; }; // в феврале аванс 26 если это пятница и не високосный год
-                if (number === 27) { day.salary = true; }; // в феврале аванс 27  если это пятница
-            }
-            if (dayWeek !== 6 && dayWeek !== 7) {
-                if (number === 28 && year % 4 ) { day.salary = true; }; // в феврале аванс 28  если это не сб или вс и не високосный
-                if (number === 29 && !(year % 4) ) { day.salary = true; }; // в феврале аванс 29  если это не сб или вс и високосный
-            }
-        }
-        if (month === 11) {
-            if (number === 29 && dayWeek !== 6 && dayWeek !== 7) { day.salary = true; }; // в декабре аванс 29 если это не сб или вс
-            if (number === 27 && dayWeek === 5) { day.salary = true; };// если 27 это пт в декабре то аванс в этот день
-        }
-        if (dayWeek === 5) {
-            if (number === 13 || number === 14) { day.salary = true; }; // если 13 или 14 это пт то зп в это день
-            if (number === 28 || number === 29) { day.salary = true; };// если 28 или 29 это пт то аванс в этот день
-        }
+        findHolidays(date, (annotation) => {day.holiday = true; day.annotation = annotation;});
+        findSalary(date, () => {day.salary = true;});
 
         graphicD.push(day);
     }
