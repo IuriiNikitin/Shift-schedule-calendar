@@ -42,6 +42,55 @@ switch (graphic) {
         break;
 }
 
+function calcTime() {
+
+    const convertTimeArr = (timeArray) => {
+        const start = timeArray[0];
+        const end = timeArray[1];
+        const startHours = +start.split(":")[0];
+        const startMinutes = +start.split(":")[1];
+        const endHours = +end.split(":")[0];
+        const endMinutes = +end.split(":")[1];
+
+        const startDate = new Date(new Date(this.date).setHours(startHours,[startMinutes]));
+        let endDate = new Date(new Date(this.date).setHours(endHours,[endMinutes]));
+
+        if(startHours > endHours || startHours < 4) { endDate = new Date(daysPlus(endDate, 1));}
+
+        return [startDate, endDate];
+    }
+
+
+
+    const time = {};
+
+    time.shiftDates = convertTimeArr(this.shiftTime);
+
+    if(typeof(this.breakTime[0]) === "string") {
+       time.breakDates = convertTimeArr(this.breakTime);
+    } else {
+        time.breakDates = [];
+        this.breakTime.forEach(item => {
+            time.breakDates.push(convertTimeArr(item));
+        });
+    }
+
+    time.finalTime = time.shiftDates[1] - time.shiftDates[0];
+
+    // if(!time.breakDates[0].length) {
+    //     if(time.shiftDates[1] > time.breakDates[1]) {
+    //         time.finalTime += time.breakDates[1] - time.breakDates[0];
+    //     }
+    // }
+
+
+    // console.log((time.finalTime / 1000) / 60 / 60);
+    console.log(time);
+    console.log(((time.breakDates[1] - time.breakDates[0]) /1000) /60 / 60);
+    // console.log(time.breakDates[0].length);
+}
+
+
 const dayOff = {
     actualType: "day-off",
     graphicType:"day-off",
@@ -57,6 +106,7 @@ const morningDay = {
     worked: true,
     shiftTime:["07:20", "20:00"],
     breakTime: [["11:30", "12:10"], ["16:00", "16:18"]],
+    calcTime:calcTime,
 };
 
 const nightDay = {
@@ -67,6 +117,7 @@ const nightDay = {
     worked: true,
     shiftTime:["20:00", "07:30"],
     breakTime: ["00:00", "00:30"],
+    calcTime:calcTime,
 };
 
 
@@ -85,6 +136,10 @@ function addDay(date, spread) {
         };
 
 // console.log(new Date(new Date(date).setHours(20,[17])));
+if(day.calcTime) {
+    day.calcTime();
+}
+
 
         if (day.date.toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
 
