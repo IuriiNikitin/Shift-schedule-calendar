@@ -20,7 +20,6 @@ const finishDate = new Date(currentYear, currentMonth, lastDay); // Послед
 
 let startDate; // Начало отсчёта смен 
 
-
 switch (graphic) {
 
     case "14.1":
@@ -52,44 +51,47 @@ function calcTime() {
         const endHours = +end.split(":")[0];
         const endMinutes = +end.split(":")[1];
 
-        const startDate = new Date(new Date(this.date).setHours(startHours,[startMinutes]));
+        let startDate = new Date(new Date(this.date).setHours(startHours,[startMinutes]));
         let endDate = new Date(new Date(this.date).setHours(endHours,[endMinutes]));
 
-        if(startHours > endHours || startHours < 4) { endDate = new Date(daysPlus(endDate, 1));}
+        if(startHours > endHours) { endDate = new Date(daysPlus(endDate, 1));}
+
+        if(startHours < 4) {
+            startDate =  new Date(daysPlus(startDate, 1));
+            endDate = new Date(daysPlus(endDate, 1));
+        }
 
         return [startDate, endDate];
     }
 
-
-
-    const time = {};
+    const time = {
+        breakDates: []
+    };
 
     time.shiftDates = convertTimeArr(this.shiftTime);
 
-    if(typeof(this.breakTime[0]) === "string") {
-       time.breakDates = convertTimeArr(this.breakTime);
-    } else {
-        time.breakDates = [];
-        this.breakTime.forEach(item => {
-            time.breakDates.push(convertTimeArr(item));
-        });
-    }
+    this.breakTime.forEach(item => {
+        time.breakDates.push(convertTimeArr(item));
+    });
 
     time.finalTime = time.shiftDates[1] - time.shiftDates[0];
 
-    // if(!time.breakDates[0].length) {
-    //     if(time.shiftDates[1] > time.breakDates[1]) {
-    //         time.finalTime += time.breakDates[1] - time.breakDates[0];
-    //     }
-    // }
+    time.breakDates.forEach(breakDates => {        
+        if(breakDates[0] >= time.shiftDates[0] && breakDates[1] <= time.shiftDates[1]) {
+            time.finalTime -= breakDates[1] - breakDates[0];
+        }
+        if(breakDates[0] < time.shiftDates[0] && breakDates[1] > time.shiftDates[0]) {
+            time.finalTime -= breakDates[1] - time.shiftDates[0];
+        }
+        if(breakDates[0] < time.shiftDates[1] && breakDates[1] > time.shiftDates[1]) {
+            time.finalTime -= time.shiftDates[1] - breakDates[0];
+        }
+    });
 
+    time.finalTime = (time.finalTime / 1000) / 60 / 60;
 
-    // console.log((time.finalTime / 1000) / 60 / 60);
-    console.log(time);
-    console.log(((time.breakDates[1] - time.breakDates[0]) /1000) /60 / 60);
-    // console.log(time.breakDates[0].length);
+        this.time = time;
 }
-
 
 const dayOff = {
     actualType: "day-off",
@@ -116,10 +118,9 @@ const nightDay = {
     descr: "Ночная смена",
     worked: true,
     shiftTime:["20:00", "07:30"],
-    breakTime: ["00:00", "00:30"],
+    breakTime: [["00:00", "00:30"]],
     calcTime:calcTime,
 };
-
 
 function daysPlus(date, days) {
     return date.setDate(date.getDate() + days);
@@ -127,19 +128,14 @@ function daysPlus(date, days) {
 
 function addDay(date, spread) {
     if (date <= finishDate && date >= firstDate) {
+        
         const day = {
-
             date:new Date(date),
             dayWeek: [7, 1, 2, 3, 4, 5, 6][new Date(date).getDay()],
-
             ...spread,
         };
 
-// console.log(new Date(new Date(date).setHours(20,[17])));
-if(day.calcTime) {
-    day.calcTime();
-}
-
+        if (day.calcTime) { day.calcTime(); }
 
         if (day.date.toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
 
@@ -191,7 +187,7 @@ if (graphic === "14.1" || graphic === "14.2") {
     }
 }
 
-// console.log(graphicD.filter(day => day.actualType === "mdg").reduce((sum, current) => {return sum + current.time}, 0));
+
 console.log(graphicD);
 
 return graphicD;
