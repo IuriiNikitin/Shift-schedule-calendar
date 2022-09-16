@@ -2,6 +2,7 @@
 
 import findSalary from "./find-salary.js";
 import findHolidays from "./find-holidays.js";
+import {showElement, hideElement} from "./show-hide-element.js";
 
 const graphic = document.getElementById("graphic");
 
@@ -90,7 +91,7 @@ function calcTime() {
 
     time.finalTime = (time.finalTime / 1000) / 60 / 60;
 
-        this.time = time;
+    for (let key in time) { this[key] = time[key]; }
 }
 
 const dayOff = {
@@ -98,6 +99,7 @@ const dayOff = {
     graphicType:"day-off",
     name: "Выход",
     descr: "Выходной день",
+    note:"",
 };
 
 const morningDay = {
@@ -109,6 +111,7 @@ const morningDay = {
     shiftTime:["07:20", "20:00"],
     breakTime: [["11:30", "12:10"], ["16:00", "16:18"]],
     calcTime:calcTime,
+    note:"",
 };
 
 const nightDay = {
@@ -120,6 +123,7 @@ const nightDay = {
     shiftTime:["20:00", "07:30"],
     breakTime: [["00:00", "00:30"]],
     calcTime:calcTime,
+    note:"",
 };
 
 function daysPlus(date, days) {
@@ -195,13 +199,13 @@ return graphicD;
 
 // getGraphic(new Date().getFullYear(), new Date().getMonth(), "16.1-1");
 
-function getMonths() {
+function getMonthsNames() {
     return ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 }
 
 function renderCalendar(year, month, graphic, id = "calendar") {
 
-    const months = getMonths();
+    const months = getMonthsNames();
     if(month < 0) {month = 11; year -= 1;};
     if(month > 11) {month = 0; year += 1;};
 
@@ -258,7 +262,7 @@ function renderCalendar(year, month, graphic, id = "calendar") {
 renderCalendar(new Date().getFullYear(), new Date().getMonth(), graphic.value);
 
 function getMonth(id = "calendar") {
-    const months = getMonths();
+    const months = getMonthsNames();
     const month = document.getElementById(id).querySelectorAll("button")[0].innerText;
     
     return months.findIndex(i => i === month);
@@ -274,7 +278,7 @@ function getYear(id = "calendar") {
 
 function renderTableHeader(id = "calendar") {
     
-    const months = getMonths();
+    const months = getMonthsNames();
     const month = months[getMonth()];
     const year = getYear();
     const header = getTableHeader(month, year);
@@ -343,7 +347,7 @@ function renderYears(year, id = "calendar") {
 function renderMonths(id = "calendar") {
 
     renderTableHeader();
-    const months = getMonths();
+    const months = getMonthsNames();
     let calendar = "<tbody><tr>";
 
     for(let i = 1; i <= 12; i++) {
@@ -370,3 +374,73 @@ function renderMonths(id = "calendar") {
 graphic.addEventListener("change", (e) => {
     renderCalendar(getYear(), getMonth(), e.target.value);
 });
+
+
+function renderDayMenu(num) {
+
+    const dayMenu = document.querySelector(".day_menu");
+    const month = getMonth();
+    const year = getYear();
+    const day = getGraphic(year, month, graphic.value)[num - 1];
+    const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+    const dayTypeOptions = {
+        dayOff:{
+            type:{name:"", descr:""},
+            possibleTypes:[{name:"", descr:""}]
+        },
+        morningDay:{
+            possibleTypes:[{name:"", descr:""}]
+        },
+        nightDay:{
+            possibleTypes:[{name:"", descr:""}]
+        },
+        overtimeMorningDay:{
+            possibleTypes:[{name:"", descr:""}]
+        },
+        overtimeNightDay:{
+            possibleTypes:[{name:"", descr:""}]
+        },
+    };
+
+
+    const dayMenuContent = `
+    <div class="day_menu_content">
+    <div class="day_menu_title">
+        <div class="day_date">${day.date.toLocaleDateString(undefined, dateOptions)}</div>
+    </div>
+    <div class="day_menu_data">
+        <div class="day_type_wrapper">
+            <div><small><small>смена</small></small></div>
+            <select name="day_type">
+                <option value="day-off" selected>Выходной день</option>
+                <option value="omd">Сверхурочная дневная смена</option>
+                <option value="ond">Сверхурочная ночная смена</option>
+            </select>
+        </div>
+
+        <div class="graphic_time">
+            <div><small><small>часы по графику</small></small></div>
+            <div>07:20-20:00 (11ч42м | 11.7ч)</div>
+        </div>
+        <div class="worked_time">
+            <div><small><small>отработанное время</small></small></div>
+            <div>07:20-20:00 (11ч42м | 11.7ч)</div>
+        </div>
+        <div class="holiday_checkbox">
+            <input type="checkbox">
+            <div>Праздничный день</div>
+        </div>
+        <div class="note">
+            <div><small><small>Заметки</small></small></div>
+            <textarea></textarea>
+        </div>
+    </div>
+
+    <div data-close class="day_menu_close">&times;</div>
+</div>`
+
+showElement(dayMenu);
+dayMenu.innerHTML = dayMenuContent;
+}
+
+renderDayMenu(8);

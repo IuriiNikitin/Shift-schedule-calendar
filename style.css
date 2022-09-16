@@ -94,7 +94,6 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, .5);
-
 }
 
 .day_menu_content {
@@ -156,4 +155,19 @@
 
 .day_menu_data .holiday_checkbox input {
   margin-left: 0;
+}
+
+.day_menu_data .graphic_time div:nth-child(2) {
+  color:black;
+  font-weight: normal;
+}
+
+.day_menu_data .worked_time div:nth-child(2) {
+  color:black;
+  font-weight: normal;
+}
+
+.day_menu_data .holiday_checkbox div {
+  color:black;
+  font-weight: normal;
 }
