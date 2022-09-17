@@ -383,38 +383,39 @@ function renderDayMenu(num) {
     const year = getYear();
     const day = getGraphic(year, month, graphic.value)[num - 1];
     const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-    const dayTypes = {
-        dayOff:{
-            type:"day-off",
+    
+    const dayTypes = [
+        {
+            actualType:"day-off",
             name:"Выход",
             descr:"Выходной день",
-            possibleTypes:[{type:"", name:"", descr:""}]
+            possibleTypes:[{actualType:"", name:"", descr:""}]
         },
-        morningDay:{
-            type:"cal-mdg",
+        {
+            actualType:"cal-mdg",
             name:"День",
             descr:"Дневная смена",
-            possibleTypes:[{type:"", name:"", descr:""}]
+            possibleTypes:[{actualType:"", name:"", descr:""}]
         },
-        nightDay:{
-            type:"cal-ndg",
+        {
+            actualType:"cal-ndg",
             name:"Ночь",
             descr:"Ночная смена",
-            possibleTypes:[{type:"", name:"", descr:""}]
+            possibleTypes:[{actualType:"", name:"", descr:""}]
         },
-        overtimeMorningDay:{
-            type:"cal-omd",
+        {
+            actualType:"cal-omd",
             name:"Сверх(Д)",
             descr:"Сверхурочная дневная смена",
-            possibleTypes:[{type:"", name:"", descr:""}]
+            possibleTypes:[{actualType:"", name:"", descr:""}]
         },
-        overtimeNightDay:{
-            type:"cal-ond",
+        {
+            actualType:"cal-ond",
             name:"Сверх(Н)",
             descr:"Сверхурочная ночная смена",
-            possibleTypes:[{type:"", name:"", descr:""}]
+            possibleTypes:[{actualType:"", name:"", descr:""}]
         },
-    };
+    ];
 
 
     const dayMenuContent = `
