@@ -383,22 +383,36 @@ function renderDayMenu(num) {
     const year = getYear();
     const day = getGraphic(year, month, graphic.value)[num - 1];
     const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-    const dayTypeOptions = {
+    const dayTypes = {
         dayOff:{
-            type:{name:"", descr:""},
-            possibleTypes:[{name:"", descr:""}]
+            type:"day-off",
+            name:"Выход",
+            descr:"Выходной день",
+            possibleTypes:[{type:"", name:"", descr:""}]
         },
         morningDay:{
-            possibleTypes:[{name:"", descr:""}]
+            type:"cal-mdg",
+            name:"День",
+            descr:"Дневная смена",
+            possibleTypes:[{type:"", name:"", descr:""}]
         },
         nightDay:{
-            possibleTypes:[{name:"", descr:""}]
+            type:"cal-ndg",
+            name:"Ночь",
+            descr:"Ночная смена",
+            possibleTypes:[{type:"", name:"", descr:""}]
         },
         overtimeMorningDay:{
-            possibleTypes:[{name:"", descr:""}]
+            type:"cal-omd",
+            name:"Сверх(Д)",
+            descr:"Сверхурочная дневная смена",
+            possibleTypes:[{type:"", name:"", descr:""}]
         },
         overtimeNightDay:{
-            possibleTypes:[{name:"", descr:""}]
+            type:"cal-ond",
+            name:"Сверх(Н)",
+            descr:"Сверхурочная ночная смена",
+            possibleTypes:[{type:"", name:"", descr:""}]
         },
     };
 
