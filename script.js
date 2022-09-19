@@ -3,6 +3,8 @@
 import findSalary from "./find-salary.js";
 import findHolidays from "./find-holidays.js";
 import {showElement, hideElement} from "./show-hide-element.js";
+import dayTypes from "./day-types-data.js";
+import dayTimes from "./day-times-data.js";
 
 const graphic = document.getElementById("graphic");
 
@@ -65,14 +67,20 @@ function calcTime() {
         return [startDate, endDate];
     }
 
-    const time = {
-        breakDates: []
+    const dates = {
+        actualBreakDates: [],
+        graphicBreakDates: []
     };
 
-    time.shiftDates = convertTimeArr(this.shiftTime);
+    dates.actualShiftDates = convertTimeArr(this.time.actualShiftTime);
+    dates.graphicShiftDates = convertTimeArr(this.time.graphicShiftTime);
 
-    this.breakTime.forEach(item => {
-        time.breakDates.push(convertTimeArr(item));
+    this.time.actualBreakTime.forEach(item => {
+        dates.actualBreakDates.push(convertTimeArr(item));
+    });
+
+    this.time.graphicBreakTime.forEach(item => {
+        dates.graphicBreakDates.push(convertTimeArr(item));
     });
 
     time.finalTime = time.shiftDates[1] - time.shiftDates[0];
@@ -95,33 +103,30 @@ function calcTime() {
 }
 
 const dayOff = {
-    actualType: "day-off",
-    graphicType:"day-off",
-    name: "Выход",
-    descr: "Выходной день",
+    ...dayTypes.find(day => day.actualType === "day-off"),
     note:"",
 };
 
 const morningDay = {
-    actualType: "cal-mdg",
-    graphicType:"cal-mdg",
-    name: "День",
-    descr: "Дневная смена",
-    worked: true,
-    shiftTime:["07:20", "20:00"],
-    breakTime: [["11:30", "12:10"], ["16:00", "16:18"]],
+    ...dayTypes.find(day => day.actualType === "cal-mdg"),
+    time: {
+        actualShiftTime: dayTimes.morning12hTime.shiftTime,
+        actualBreakTime: dayTimes.morning12hTime.breakTime,
+        graphicShiftTime: dayTimes.morning12hTime.shiftTime,
+        graphicBreakTime: dayTimes.morning12hTime.breakTime,
+    },
     calcTime:calcTime,
     note:"",
 };
 
 const nightDay = {
-    actualType: "cal-ndg",
-    graphicType:"cal-ndg",
-    name: "Ночь",
-    descr: "Ночная смена",
-    worked: true,
-    shiftTime:["20:00", "07:30"],
-    breakTime: [["00:00", "00:30"]],
+    ...dayTypes.find(day => day.actualType === "cal-ndg"),
+    time: {
+        actualShiftTime: dayTimes.night12hTime.shiftTime,
+        actualBreakTime: dayTimes.night12hTime.breakTime,
+        graphicShiftTime: dayTimes.morning12hTime.shiftTime,
+        graphicBreakTime: dayTimes.morning12hTime.breakTime,
+    },
     calcTime:calcTime,
     note:"",
 };
@@ -139,7 +144,7 @@ function addDay(date, spread) {
             ...spread,
         };
 
-        if (day.calcTime) { day.calcTime(); }
+        // if (day.calcTime) { day.calcTime(); }
 
         if (day.date.toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
 
@@ -384,40 +389,7 @@ function renderDayMenu(num) {
     const day = getGraphic(year, month, graphic.value)[num - 1];
     const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     
-    const dayTypes = [
-        {
-            actualType:"day-off",
-            name:"Выход",
-            descr:"Выходной день",
-            possibleTypes:[{actualType:"", name:"", descr:""}]
-        },
-        {
-            actualType:"cal-mdg",
-            name:"День",
-            descr:"Дневная смена",
-            possibleTypes:[{actualType:"", name:"", descr:""}]
-        },
-        {
-            actualType:"cal-ndg",
-            name:"Ночь",
-            descr:"Ночная смена",
-            possibleTypes:[{actualType:"", name:"", descr:""}]
-        },
-        {
-            actualType:"cal-omd",
-            name:"Сверх(Д)",
-            descr:"Сверхурочная дневная смена",
-            possibleTypes:[{actualType:"", name:"", descr:""}]
-        },
-        {
-            actualType:"cal-ond",
-            name:"Сверх(Н)",
-            descr:"Сверхурочная ночная смена",
-            possibleTypes:[{actualType:"", name:"", descr:""}]
-        },
-    ];
-
-
+    
     const dayMenuContent = `
     <div class="day_menu_content">
     <div class="day_menu_title">
@@ -459,3 +431,4 @@ dayMenu.innerHTML = dayMenuContent;
 }
 
 renderDayMenu(8);
+
