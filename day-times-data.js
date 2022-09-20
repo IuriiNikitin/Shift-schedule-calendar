@@ -1,16 +1,16 @@
-const dayTimes = {
-    morning12hTime:{
-        shiftTime:["07:20", "20:00"],
-        breakTime: [["11:30", "12:10"], ["16:00", "16:18"]],
+const dayTime = {
+    morning12h:{
+        shift:["07:20", "20:00"],
+        break: [["11:30", "12:10"], ["16:00", "16:18"]],
     },
-    night12hTime:{
-        shiftTime:["20:00", "07:30"],
-        breakTime: [["00:00", "00:30"]],
+    night12h:{
+        shift:["20:00", "07:30"],
+        break: [["00:00", "00:30"]],
     },
-    morning8hTime: {
-        shiftTime:["07:20", "16:00"],
-        breakTime: [["11:30", "12:10"]],
+    morning8h: {
+        shift:["07:20", "16:00"],
+        break: [["11:30", "12:10"]],
     },
 };
 
-export default dayTimes;
+export default dayTime;

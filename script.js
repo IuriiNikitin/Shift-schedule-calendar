@@ -4,7 +4,7 @@ import findSalary from "./find-salary.js";
 import findHolidays from "./find-holidays.js";
 import {showElement, hideElement} from "./show-hide-element.js";
 import dayTypes from "./day-types-data.js";
-import dayTimes from "./day-times-data.js";
+import dayTime from "./day-times-data.js";
 
 const graphic = document.getElementById("graphic");
 
@@ -46,7 +46,7 @@ switch (graphic) {
 
 function calcTime() {
 
-    const convertTimeArr = (timeArray) => {
+    const convertTime = (timeArray) => {
         const start = timeArray[0];
         const end = timeArray[1];
         const startHours = +start.split(":")[0];
@@ -63,43 +63,52 @@ function calcTime() {
             startDate =  new Date(daysPlus(startDate, 1));
             endDate = new Date(daysPlus(endDate, 1));
         }
-
         return [startDate, endDate];
+    }
+    
+    const convertTimeArr = (timeArrArr) => {
+        let result;
+
+        if (Array.isArray(timeArrArr[0])) {
+            result = [];
+            timeArrArr.forEach(item => { result.push(convertTime(item)); });
+        } else { result = convertTime(timeArrArr); }
+        
+        return result;
     }
 
     const dates = {
-        actualBreakDates: [],
-        graphicBreakDates: []
-    };
+        actual: {},
+        graphic: {},
+    }
 
-    dates.actualShiftDates = convertTimeArr(this.time.actualShiftTime);
-    dates.graphicShiftDates = convertTimeArr(this.time.graphicShiftTime);
+    dates.actual.shift = convertTimeArr(this.time.actual.shift);
+    dates.actual.break = convertTimeArr(this.time.actual.break);
 
-    this.time.actualBreakTime.forEach(item => {
-        dates.actualBreakDates.push(convertTimeArr(item));
-    });
+    dates.graphic.shift = convertTimeArr(this.time.graphic.shift);
+    dates.graphic.break = convertTimeArr(this.time.graphic.break);
 
-    this.time.graphicBreakTime.forEach(item => {
-        dates.graphicBreakDates.push(convertTimeArr(item));
-    });
 
-    time.finalTime = time.shiftDates[1] - time.shiftDates[0];
 
-    time.breakDates.forEach(breakDates => {        
-        if(breakDates[0] >= time.shiftDates[0] && breakDates[1] <= time.shiftDates[1]) {
-            time.finalTime -= breakDates[1] - breakDates[0];
-        }
-        if(breakDates[0] < time.shiftDates[0] && breakDates[1] > time.shiftDates[0]) {
-            time.finalTime -= breakDates[1] - time.shiftDates[0];
-        }
-        if(breakDates[0] < time.shiftDates[1] && breakDates[1] > time.shiftDates[1]) {
-            time.finalTime -= time.shiftDates[1] - breakDates[0];
-        }
-    });
+    this.dates = dates;
 
-    time.finalTime = (time.finalTime / 1000) / 60 / 60;
+    // time.finalTime = time.shiftDates[1] - time.shiftDates[0];
 
-    for (let key in time) { this[key] = time[key]; }
+    // time.breakDates.forEach(breakDates => {        
+    //     if(breakDates[0] >= time.shiftDates[0] && breakDates[1] <= time.shiftDates[1]) {
+    //         time.finalTime -= breakDates[1] - breakDates[0];
+    //     }
+    //     if(breakDates[0] < time.shiftDates[0] && breakDates[1] > time.shiftDates[0]) {
+    //         time.finalTime -= breakDates[1] - time.shiftDates[0];
+    //     }
+    //     if(breakDates[0] < time.shiftDates[1] && breakDates[1] > time.shiftDates[1]) {
+    //         time.finalTime -= time.shiftDates[1] - breakDates[0];
+    //     }
+    // });
+
+    // time.finalTime = (time.finalTime / 1000) / 60 / 60;
+
+    // for (let key in time) { this[key] = time[key]; }
 }
 
 const dayOff = {
@@ -110,10 +119,14 @@ const dayOff = {
 const morningDay = {
     ...dayTypes.find(day => day.actualType === "cal-mdg"),
     time: {
-        actualShiftTime: dayTimes.morning12hTime.shiftTime,
-        actualBreakTime: dayTimes.morning12hTime.breakTime,
-        graphicShiftTime: dayTimes.morning12hTime.shiftTime,
-        graphicBreakTime: dayTimes.morning12hTime.breakTime,
+        actual: {
+            shift: dayTime.morning12h.shift,
+            break: dayTime.morning12h.break,
+        },
+        graphic: {
+            shift: dayTime.morning12h.shift,
+            break: dayTime.morning12h.break,
+        },
     },
     calcTime:calcTime,
     note:"",
@@ -122,10 +135,14 @@ const morningDay = {
 const nightDay = {
     ...dayTypes.find(day => day.actualType === "cal-ndg"),
     time: {
-        actualShiftTime: dayTimes.night12hTime.shiftTime,
-        actualBreakTime: dayTimes.night12hTime.breakTime,
-        graphicShiftTime: dayTimes.morning12hTime.shiftTime,
-        graphicBreakTime: dayTimes.morning12hTime.breakTime,
+        actual: {
+            shift: dayTime.night12h.shift,
+            break: dayTime.night12h.break,
+        },
+        graphic: {
+            shift: dayTime.night12h.shift,
+            break: dayTime.night12h.break,
+        },
     },
     calcTime:calcTime,
     note:"",
@@ -144,7 +161,7 @@ function addDay(date, spread) {
             ...spread,
         };
 
-        // if (day.calcTime) { day.calcTime(); }
+        if (day.calcTime) { day.calcTime(); }
 
         if (day.date.toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
 
