@@ -78,16 +78,37 @@ function calcTime() {
     }
 
     const dates = {
-        actual: {},
-        graphic: {},
+        // actual: {},
+        // graphic: {},
     }
 
-    dates.actual.shift = convertTimeArr(this.time.actual.shift);
-    dates.actual.break = convertTimeArr(this.time.actual.break);
+    // dates.actual.shift = convertTimeArr(this.time.actual.shift);
+    // dates.actual.break = convertTimeArr(this.time.actual.break);
 
-    dates.graphic.shift = convertTimeArr(this.time.graphic.shift);
-    dates.graphic.break = convertTimeArr(this.time.graphic.break);
+    // dates.graphic.shift = convertTimeArr(this.time.graphic.shift);
+    // dates.graphic.break = convertTimeArr(this.time.graphic.break);
+    
 
+    // for(let key in this.time) { // actual graphic
+    //     dates[key] = {};
+    //     for(let key1 in this.time[key]) { // break shift
+    //         dates[key][key1] = convertTimeArr(this.time[key][key1]);
+    //     }
+    // }
+
+    function convertTimeObj(timeObj) {
+
+        for(let key in timeObj) {
+            if(Array.isArray(timeObj[key])) {
+                dates[key] = convertTimeArr(timeObj[key]);
+            } else {
+                dates[key] = {};
+                convertTimeObj(timeObj[key]);
+            }
+        }
+    }
+
+    convertTimeObj(this.time);
 
 
     this.dates = dates;
