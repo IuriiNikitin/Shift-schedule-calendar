@@ -77,43 +77,25 @@ function calcTime() {
         return result;
     }
 
-    const dates = {
-        // actual: {},
-        // graphic: {},
-    }
+    const dates = {};
 
-    // dates.actual.shift = convertTimeArr(this.time.actual.shift);
-    // dates.actual.break = convertTimeArr(this.time.actual.break);
-
-    // dates.graphic.shift = convertTimeArr(this.time.graphic.shift);
-    // dates.graphic.break = convertTimeArr(this.time.graphic.break);
-    
-
-    // for(let key in this.time) { // actual graphic
-    //     dates[key] = {};
-    //     for(let key1 in this.time[key]) { // break shift
-    //         dates[key][key1] = convertTimeArr(this.time[key][key1]);
-    //     }
-    // }
-
-    function convertTimeObj(timeObj) {
-
-        for(let key in timeObj) {
-            if(Array.isArray(timeObj[key])) {
-                dates[key] = convertTimeArr(timeObj[key]);
-            } else {
-                dates[key] = {};
-                convertTimeObj(timeObj[key]);
+    for (let key in this.time) { // actual graphic
+        if (Array.isArray(this.time[key])) {
+            dates[key] = convertTimeArr(this.time[key]);
+        } else {
+            dates[key] = {};
+            for (let key1 in this.time[key]) { // break shift
+                dates[key][key1] = convertTimeArr(this.time[key][key1]);
             }
         }
     }
 
-    convertTimeObj(this.time);
-
-
     this.dates = dates;
 
-    // time.finalTime = time.shiftDates[1] - time.shiftDates[0];
+    const calcdTime = {
+    };
+
+    calcdTime.actual = dates.actual.shift[1] - dates.actual.shift[0];
 
     // time.breakDates.forEach(breakDates => {        
     //     if(breakDates[0] >= time.shiftDates[0] && breakDates[1] <= time.shiftDates[1]) {
