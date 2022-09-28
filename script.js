@@ -5,6 +5,7 @@ import findHolidays from "./find-holidays.js";
 import {showElement, hideElement} from "./show-hide-element.js";
 import dayTypes from "./day-types-data.js";
 import dayTime from "./day-times-data.js";
+import roundHours from "./round-hours.js";
 
 const graphic = document.getElementById("graphic");
 
@@ -92,26 +93,30 @@ function calcTime() {
 
     this.dates = dates;
 
-    const calcdTime = {
-    };
+    function calcFinalTime(shiftDatesArr, breakDatesArr) {
 
-    calcdTime.actual = dates.actual.shift[1] - dates.actual.shift[0];
+        let finalTime = shiftDatesArr[1] - shiftDatesArr[0];
 
-    // time.breakDates.forEach(breakDates => {        
-    //     if(breakDates[0] >= time.shiftDates[0] && breakDates[1] <= time.shiftDates[1]) {
-    //         time.finalTime -= breakDates[1] - breakDates[0];
-    //     }
-    //     if(breakDates[0] < time.shiftDates[0] && breakDates[1] > time.shiftDates[0]) {
-    //         time.finalTime -= breakDates[1] - time.shiftDates[0];
-    //     }
-    //     if(breakDates[0] < time.shiftDates[1] && breakDates[1] > time.shiftDates[1]) {
-    //         time.finalTime -= time.shiftDates[1] - breakDates[0];
-    //     }
-    // });
+        breakDatesArr.forEach(breakDates => {
 
-    // time.finalTime = (time.finalTime / 1000) / 60 / 60;
+        if(breakDates[0] >= shiftDatesArr[0] && breakDates[1] <= shiftDatesArr[1]) {
+            finalTime -= breakDates[1] - breakDates[0];
+        }
+        if(breakDates[0] < shiftDatesArr[0] && breakDates[1] > shiftDatesArr[0]) {
+            finalTime -= breakDates[1] - shiftDates[0];
+        }
+        if(breakDates[0] < shiftDatesArr[1] && breakDates[1] > shiftDatesArr[1]) {
+            finalTime -= shiftDates[1] - breakDates[0];
+        }
+        });
 
-    // for (let key in time) { this[key] = time[key]; }
+        return (finalTime / 1000) / 60 / 60;
+    }
+
+    this.finalTime = {};
+    this.finalTime.actual = calcFinalTime(dates.actual.shift, dates.actual.break);
+    this.finalTime.graphic = calcFinalTime(dates.graphic.shift, dates.graphic.break);
+
 }
 
 const dayOff = {
@@ -261,7 +266,7 @@ function renderCalendar(year, month, graphic, id = "calendar") {
         if(days[i].salary) {icons += "<img src='./img/rouble.svg' alt='rouble'>"};
         if(days[i].holiday) {icons += "<img src='./img/holiday.svg' alt='holiday'>"};
 
-        calendar += `<td class="${clazz}"><div>${num}</div><div>${name}</div>`;
+        calendar += `<td class="day ${clazz}"><div>${num}</div><div>${name}</div>`;
 
         if(days[i].salary || days[i].holiday) {calendar += icons}
         if(days[i].dayWeek === 7) {calendar += "<tr>"}
@@ -282,6 +287,13 @@ function renderCalendar(year, month, graphic, id = "calendar") {
     document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
         renderYears(+year);
     });
+
+    document.getElementById(id).querySelectorAll(".day").forEach((day, i) => {
+        day.addEventListener("click", () => {
+            renderDayMenu(i + 1);
+        })
+    })
+
 }
 
 renderCalendar(new Date().getFullYear(), new Date().getMonth(), graphic.value);
@@ -408,6 +420,36 @@ function renderDayMenu(num) {
     const year = getYear();
     const day = getGraphic(year, month, graphic.value)[num - 1];
     const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+    let graphicTime, workedTime;
+    let holidayCheckbox = "<input type='checkbox' ";
+    let holidayAnnotation = "";
+
+    let dayTypeOptions = `<option value=${day.actualType} selected>${day.descr}`
+
+    day.possibleTypes.forEach(type => {
+       const option = dayTypes.find(day => day.actualType === type);
+       dayTypeOptions += `<option value=${type}>${option.descr}`
+    });
+
+    if(day.time) {
+        graphicTime = `
+        <div>${day.time.graphic.shift[0]}-${day.time.graphic.shift[1]} 
+        (${Math.trunc(day.finalTime.graphic)}ч${roundHours((day.finalTime.graphic % 1) * 60)}м |
+         ${day.finalTime.graphic}ч)</div>`
+    
+        workedTime = `
+         <div>${day.time.actual.shift[0]}-${day.time.actual.shift[1]} 
+         (${Math.trunc(day.finalTime.actual)}ч${roundHours((day.finalTime.actual % 1) * 60)}м |
+          ${day.finalTime.actual}ч)</div>`
+    } else {
+        graphicTime = "<div class='disable'>00:00-00:00 (0ч0м | 0ч)</div>";
+        workedTime = "<div class='disable'>00:00-00:00 (0ч0м | 0ч)</div>";
+    }
+
+    day.holiday ? holidayCheckbox += "checked>" : holidayCheckbox += ">";
+
+    if(day.annotation) {holidayAnnotation = `<div>${day.annotation}</div>`}
+
     
     
     const dayMenuContent = `
@@ -419,27 +461,26 @@ function renderDayMenu(num) {
         <div class="day_type_wrapper">
             <div><small><small>смена</small></small></div>
             <select name="day_type">
-                <option value="day-off" selected>Выходной день</option>
-                <option value="omd">Сверхурочная дневная смена</option>
-                <option value="ond">Сверхурочная ночная смена</option>
+                ${dayTypeOptions}
             </select>
         </div>
 
         <div class="graphic_time">
             <div><small><small>часы по графику</small></small></div>
-            <div>07:20-20:00 (11ч42м | 11.7ч)</div>
+            ${graphicTime}
         </div>
         <div class="worked_time">
             <div><small><small>отработанное время</small></small></div>
-            <div>07:20-20:00 (11ч42м | 11.7ч)</div>
+            ${workedTime}
         </div>
         <div class="holiday_checkbox">
-            <input type="checkbox">
+            ${holidayCheckbox}
             <div>Праздничный день</div>
         </div>
+        ${holidayAnnotation}
         <div class="note">
             <div><small><small>Заметки</small></small></div>
-            <textarea></textarea>
+            <textarea>${day.note}</textarea>
         </div>
     </div>
 
@@ -448,7 +489,12 @@ function renderDayMenu(num) {
 
 showElement(dayMenu);
 dayMenu.innerHTML = dayMenuContent;
+
+
+dayMenu.querySelector(".day_menu_close").addEventListener("click", () => {
+    hideElement(dayMenu);
+});
 }
 
-renderDayMenu(8);
+// renderDayMenu(new Date().getDate());
 
