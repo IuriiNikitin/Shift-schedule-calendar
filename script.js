@@ -224,6 +224,24 @@ if (graphic === "14.1" || graphic === "14.2") {
 
 console.log(graphicD);
 
+
+if(localStorage.getItem(`${year}:${month}:${graphic}`)) {
+
+    const lsData = JSON.parse(localStorage.getItem(`${year}:${month}:${graphic}`));
+
+    for(let day in lsData) {
+
+        graphicD[+day - 1] = Object.assign(graphicD[+day - 1], lsData[day]);
+
+        if(graphicD[+day - 1].time) {
+
+            graphicD[+day - 1].calcTime = calcTime;
+            graphicD[+day - 1].calcTime();
+        }
+    }
+
+}
+
 return graphicD;
 }
 
@@ -498,3 +516,27 @@ dayMenu.querySelector(".day_menu_close").addEventListener("click", () => {
 
 // renderDayMenu(new Date().getDate());
 
+const abc = {
+    21: {
+        actualType: "cal-mdg",
+        descr: "descr",
+        name: "exampl",
+        holiday: true,
+        time: {
+            actual:{
+                shift:["07:20" , "19:00"],
+                break:[["11:30", "12:10"], ["16:00", "16:18"]]
+            },
+            graphic:{
+                shift:["07:20" , "20:00"],
+                break:[["11:30", "12:10"], ["16:00", "16:18"]]
+            }
+        }
+    }
+}
+
+// localStorage.setItem("2022:8:16.1-1", JSON.stringify(abc));
+
+// if(localStorage.getItem("2022;8;16.1-1")){
+//     console.log("its here!");
+// }
