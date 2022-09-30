@@ -92,6 +92,11 @@
   background-color: rgba(0, 0, 0, .5);
 }
 
+.day_menu_title, .time_menu_title {
+  margin-bottom: 8px;
+  color:#000;
+}
+
 .day_menu_content {
   position: relative;
   box-sizing:border-box;
@@ -175,4 +180,73 @@
 
 .day_menu_data .worked_time div:nth-child(2).disable {
   color:#A3A4A8;
+}
+
+
+.time_menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+}
+
+.time_menu_content {
+  position: relative;
+  box-sizing:border-box;
+  padding: 25px 15px;
+  background-color:white;
+  width: 80%;
+  /* min-height: 300px; */
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.time_menu_data {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.time_menu_data>div {
+  /* margin: 8px 0; */
+  display: flex;
+  justify-content: space-evenly;
+  align-items:flex-start;
+}
+.time_menu_data .small_descr {
+  text-align: left;
+}
+
+.time_menu_data .calcdTime div:nth-child(2) {
+  height: 24px;
+  display: table-cell;
+  vertical-align: middle;
+  color:#000;
+  font-weight: normal;
+}
+
+.time_menu_data .time_title {
+  justify-content: space-between;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  color:#000;
+  font-weight: normal;
+}
+
+.time_menu_content .time_menu_btns {
+  width: 90%;
+  margin: auto;
+  margin-top: 35px;
+  display: flex;
+  justify-content: right;
+}
+
+.time_menu_content .time_menu_btns button {
+  margin: 0 4px;
 }

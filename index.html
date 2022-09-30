@@ -23,41 +23,55 @@
                         <option value="16.2-2">График 16 смена 2-2</option>
                     </select>
                   <table id="calendar"></table>
-                  <div class="day_menu hide">
-                    <!-- <div class="day_menu_content">
-                        <div class="day_menu_title">
-                            <div class="day_date">02 Сент 2022 (Пт)</div>
-                        </div>
-                        <div class="day_menu_data">
-                            <div class="day_type_wrapper">
-                                <div><small><small>смена</small></small></div>
-                                <select name="day_type">
-                                    <option value="day-off" selected>Выходной день</option>
-                                    <option value="omd">Сверхурочная дневная смена</option>
-                                    <option value="ond">Сверхурочная ночная смена</option>
-                                </select>
-                            </div>
-    
-                            <div class="graphic_time">
-                                <div><small><small>часы по графику</small></small></div>
-                                <div>07:20-20:00 (11ч42м)</div>
-                            </div>
-                            <div class="worked_time">
-                                <div><small><small>отработанное время</small></small></div>
-                                <div>07:20-20:00 (11ч42м)</div>
-                            </div>
-                            <div class="holiday_checkbox">
-                                <input type="checkbox">
-                                <div>Праздничный день</div>
-                            </div>
-                            <div class="note">
-                                <div><small><small>Заметки</small></small></div>
-                                <textarea></textarea>
-                            </div>
-                        </div>
+                  <div class="day_menu hide"></div>
 
-                        <div data-close class="day_menu_close">&times;</div>
-                    </div> -->
+                  <div class="time_menu">
+
+                    <div class="time_menu_content">
+                        <div class="time_menu_title">Время по графику</div>
+                        <div class="time_menu_data">
+                            <div class="time_title"><div>рабочее время</div><div>(11ч42м | 11.7ч)</div></div>
+                            <div class="shift">
+                                <div class="start">
+                                    <div class="small_descr"><small><small>начало</small></small></div>
+                                    <input type="time" value="07:20">
+                                </div>
+                                <div class="end">
+                                    <div class="small_descr"><small><small>конец</small></small></div>
+                                    <input type="time" value="20:00">
+                                </div>
+                            </div>
+                            <div class="time_title">время перерыва</div>
+
+                                <div class="break">
+                                    <div class="start">
+                                        <div class="small_descr"><small><small>начало</small></small></div>
+                                        <input type="time" value="11:30">
+                                    </div>
+                                    <div class="end">
+                                        <div class="small_descr"><small><small>конец</small></small></div>
+                                        <input type="time" value="12:10">
+                                    </div>
+                                </div>
+    
+                                <div class="break">
+                                    <div class="start">
+                                        <div class="small_descr"><small><small>начало</small></small></div>
+                                        <input type="time" value="16:00">
+                                    </div>
+                                    <div class="end">
+                                        <div class="small_descr"><small><small>конец</small></small></div>
+                                        <input type="time" value="16:18">
+                                    </div>
+                                </div>
+
+                        </div>
+                        <div class="time_menu_btns">
+                            <button>Сбросить</button>
+                            <button>Отмена</button>
+                            <button>Ок</button>
+                        </div>
+                    </div>
                   </div>
                 </div>
                 <div class="modal_message hide"></div>

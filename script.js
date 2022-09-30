@@ -449,19 +449,27 @@ function renderDayMenu(num) {
        dayTypeOptions += `<option value=${type}>${option.descr}`
     });
 
+    function getTimeDiv(timeType) {
+        let div;
+        if(timeType) {
+            div = `
+            <div class=${timeType}>
+                ${day.time[timeType].shift[0]}-${day.time[timeType].shift[1]} 
+                (${Math.trunc(day.finalTime[timeType])}ч${roundHours((day.finalTime[timeType] % 1) * 60)}м |
+                ${day.finalTime[timeType]}ч)
+            </div>`
+        } else {
+            div = "<div class='disable'>00:00-00:00 (0ч0м | 0ч)</div>";
+        }
+        return div;
+    }
+
     if(day.time) {
-        graphicTime = `
-        <div>${day.time.graphic.shift[0]}-${day.time.graphic.shift[1]} 
-        (${Math.trunc(day.finalTime.graphic)}ч${roundHours((day.finalTime.graphic % 1) * 60)}м |
-         ${day.finalTime.graphic}ч)</div>`
-    
-        workedTime = `
-         <div>${day.time.actual.shift[0]}-${day.time.actual.shift[1]} 
-         (${Math.trunc(day.finalTime.actual)}ч${roundHours((day.finalTime.actual % 1) * 60)}м |
-          ${day.finalTime.actual}ч)</div>`
+        graphicTime = getTimeDiv("graphic");
+        workedTime = getTimeDiv("actual");
     } else {
-        graphicTime = "<div class='disable'>00:00-00:00 (0ч0м | 0ч)</div>";
-        workedTime = "<div class='disable'>00:00-00:00 (0ч0м | 0ч)</div>";
+        graphicTime = getTimeDiv();
+        workedTime = getTimeDiv();
     }
 
     day.holiday ? holidayCheckbox += "checked>" : holidayCheckbox += ">";
@@ -484,7 +492,7 @@ function renderDayMenu(num) {
         </div>
 
         <div class="graphic_time">
-            <div><small><small>часы по графику</small></small></div>
+            <div><small><small>время по графику</small></small></div>
             ${graphicTime}
         </div>
         <div class="worked_time">
@@ -514,26 +522,29 @@ dayMenu.querySelector(".day_menu_close").addEventListener("click", () => {
 });
 }
 
-// renderDayMenu(new Date().getDate());
 
-const abc = {
-    21: {
-        actualType: "cal-mdg",
-        descr: "descr",
-        name: "exampl",
-        holiday: true,
-        time: {
-            actual:{
-                shift:["07:20" , "19:00"],
-                break:[["11:30", "12:10"], ["16:00", "16:18"]]
-            },
-            graphic:{
-                shift:["07:20" , "20:00"],
-                break:[["11:30", "12:10"], ["16:00", "16:18"]]
-            }
-        }
-    }
-}
+
+
+renderDayMenu(new Date().getDate());
+
+// const abc = {
+//     21: {
+//         actualType: "cal-mdg",
+//         descr: "descr",
+//         name: "exampl",
+//         holiday: true,
+//         time: {
+//             actual:{
+//                 shift:["07:20" , "19:00"],
+//                 break:[["11:30", "12:10"], ["16:00", "16:18"]]
+//             },
+//             graphic:{
+//                 shift:["07:20" , "20:00"],
+//                 break:[["11:30", "12:10"], ["16:00", "16:18"]]
+//             }
+//         }
+//     }
+// }
 
 // localStorage.setItem("2022:8:16.1-1", JSON.stringify(abc));
 
