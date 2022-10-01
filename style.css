@@ -207,7 +207,7 @@
 }
 
 .time_menu_data {
-  width: 90%;
+  width: 75%;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -216,7 +216,7 @@
 .time_menu_data>div {
   /* margin: 8px 0; */
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items:flex-start;
 }
 .time_menu_data .small_descr {
@@ -232,17 +232,23 @@
 }
 
 .time_menu_data .time_title {
-  justify-content: space-between;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  color:#000;
+  justify-content:space-between;
+  margin-top: 20px;
+  margin-bottom: 0px;
+  /* color:#000; */
   font-weight: normal;
+}
+
+.time_menu_data .time_menu_total_time {
+  margin-top: 25px;
+  /* justify-content: center; */
+  color:#000;
 }
 
 .time_menu_content .time_menu_btns {
   width: 90%;
   margin: auto;
-  margin-top: 35px;
+  margin-top: 25px;
   display: flex;
   justify-content: right;
 }
@@ -250,3 +256,4 @@
 .time_menu_content .time_menu_btns button {
   margin: 0 4px;
 }
+

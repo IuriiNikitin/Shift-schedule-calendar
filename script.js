@@ -455,11 +455,11 @@ function renderDayMenu(num) {
             div = `
             <div class=${timeType}>
                 ${day.time[timeType].shift[0]}-${day.time[timeType].shift[1]} 
-                (${Math.trunc(day.finalTime[timeType])}ч${roundHours((day.finalTime[timeType] % 1) * 60)}м |
-                ${day.finalTime[timeType]}ч)
+                ( ${Math.trunc(day.finalTime[timeType])}ч ${roundHours((day.finalTime[timeType] % 1) * 60)}м |
+                ${day.finalTime[timeType]}ч )
             </div>`
         } else {
-            div = "<div class='disable'>00:00-00:00 (0ч0м | 0ч)</div>";
+            div = "<div class='disable'>00:00-00:00 ( 0ч 0м | 0ч )</div>";
         }
         return div;
     }
