@@ -265,3 +265,8 @@
   margin: 0 4px;
 }
 
+.time_menu_data input[type=time] {
+  box-sizing:border-box;
+  width: 75px;
+  height: 24px;
+}
