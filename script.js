@@ -231,7 +231,8 @@ if(localStorage.getItem(`${year}:${month}:${graphic}`)) {
 
     for(let day in lsData) {
 
-        graphicD[+day - 1] = Object.assign(graphicD[+day - 1], lsData[day]);
+        // graphicD[+day - 1] = Object.assign(graphicD[+day - 1], lsData[day]);
+        graphicD[+day - 1] = {...graphicD[+day - 1], ...lsData[day]};
 
         if(graphicD[+day - 1].time) {
 
@@ -253,11 +254,10 @@ function getMonthsNames() {
 
 function renderCalendar(year, month, graphic, id = "calendar") {
 
-    const months = getMonthsNames();
     if(month < 0) {month = 11; year -= 1;};
     if(month > 11) {month = 0; year += 1;};
 
-    let header = getTableHeader(months[month], year, [2, 3, 2]);
+    let header = getTableHeader(month, year, [2, 3, 2]);
     header += "<tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>";
 
 
@@ -317,10 +317,8 @@ function renderCalendar(year, month, graphic, id = "calendar") {
 renderCalendar(new Date().getFullYear(), new Date().getMonth(), graphic.value);
 
 function getMonth(id = "calendar") {
-    const months = getMonthsNames();
-    const month = document.getElementById(id).querySelectorAll("button")[0].innerText;
-    
-    return months.findIndex(i => i === month);
+    const month = document.getElementById(id).querySelectorAll("button")[0].dataset.monthnum;
+    return +month;
 }
 
 function getYear(id = "calendar") {
@@ -333,8 +331,7 @@ function getYear(id = "calendar") {
 
 function renderTableHeader(id = "calendar") {
     
-    const months = getMonthsNames();
-    const month = months[getMonth()];
+    const month = getMonth();
     const year = getYear();
     const header = getTableHeader(month, year);
 
@@ -342,6 +339,9 @@ function renderTableHeader(id = "calendar") {
 }
 
 function getTableHeader(month, year, colspan = [0, 0, 0]) {
+
+    const monthName = getMonthsNames()[month];
+
     return `<thead>
     <tr>
         <th colspan="${colspan[0]}">
@@ -351,7 +351,7 @@ function getTableHeader(month, year, colspan = [0, 0, 0]) {
         </th>
         <th colspan="${colspan[1]}">
             <div>
-                <button>${month}</button>
+                <button data-monthNum=${month}>${monthName}</button>
                 <button>${year}</button>
             </div>
         </th>
@@ -495,7 +495,7 @@ function renderDayMenu(num) {
             <div><small><small>время по графику</small></small></div>
             ${graphicTime}
         </div>
-        <div class="worked_time">
+        <div class="actual_time">
             <div><small><small>отработанное время</small></small></div>
             ${workedTime}
         </div>
@@ -513,22 +513,126 @@ function renderDayMenu(num) {
     <div data-close class="day_menu_close">&times;</div>
 </div>`
 
-showElement(dayMenu);
 dayMenu.innerHTML = dayMenuContent;
+showElement(dayMenu);
 
 
 dayMenu.querySelector(".day_menu_close").addEventListener("click", () => {
     hideElement(dayMenu);
+    dayMenu.innerHTML = "";
 });
+
+if(day.time) {
+    dayMenu.querySelector(".actual").addEventListener("click", () => {
+        renderTimeMenu(num, "actual");
+    });
+    dayMenu.querySelector(".graphic").addEventListener("click", () => {
+        renderTimeMenu(num, "graphic");
+    });
+}
+
 }
 
 
 
 
-renderDayMenu(new Date().getDate());
+// renderDayMenu(new Date().getDate());
+
+function renderTimeMenu(num, timeType) {
+
+    const timeMenu = document.querySelector(".time_menu");
+    const month = getMonth();
+    const year = getYear();
+    const day = getGraphic(year, month, graphic.value)[num - 1];
+
+    let breakTimeHtml = "";
+    let name = "";
+
+    switch(timeType) {
+        case "actual" :
+            name = "Отработанное время";
+            break;
+        case "graphic" :
+            name = "Время по графику";
+            break;
+    }
+
+    day.time[timeType].break.forEach(breakTime => {
+        breakTimeHtml += `
+            <div class="break">
+            <div class="start">
+                <div class="small_descr"><small><small>начало</small></small></div>
+                <input type="time" value=${breakTime[0]}>
+            </div>
+            <div class="end">
+                <div class="small_descr"><small><small>конец</small></small></div>
+                <input type="time" value=${breakTime[1]}>
+            </div>
+        </div>
+        `
+    })
+
+    const timeMenuContent = `
+    <div class="time_menu_content">
+        <div class="time_menu_title">${name}</div>
+        <div class="time_menu_data">
+            <div class="time_title"><div>Рабочее время</div></div>
+            <div class="shift">
+                <div class="start">
+                    <div class="small_descr"><small><small>начало</small></small></div>
+                    <input type="time" value=${day.time[timeType].shift[0]}>
+                </div>
+                <div class="end">
+                    <div class="small_descr"><small><small>конец</small></small></div>
+                    <input type="time" value=${day.time[timeType].shift[1]}>
+                </div>
+            </div>
+            <div class="time_title">Время перерыва</div>
+                ${breakTimeHtml}
+
+                <div class="time_menu_total_time">Итого : 
+                ( ${Math.trunc(day.finalTime[timeType])}ч 
+                ${roundHours((day.finalTime[timeType] % 1) * 60)}м |
+                ${day.finalTime[timeType]}ч )</div>
+
+                </div>
+                <div class="time_menu_btns">
+                    <button>Сбросить</button>
+                    <button>Отмена</button>
+                    <button>Ок</button>
+        </div>
+    </div>`
+
+
+    timeMenu.innerHTML = timeMenuContent;
+    showElement(timeMenu);
+
+    timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[1].addEventListener("click", () => {
+        hideElement(timeMenu);
+        timeMenu.innerHTML = "";
+    })
+}
+
+// renderTimeMenu(5, "actual");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // const abc = {
-//     21: {
+//     6: {
 //         actualType: "cal-mdg",
 //         descr: "descr",
 //         name: "exampl",
@@ -546,7 +650,7 @@ renderDayMenu(new Date().getDate());
 //     }
 // }
 
-// localStorage.setItem("2022:8:16.1-1", JSON.stringify(abc));
+// localStorage.setItem("2022:9:16.1-1", JSON.stringify(abc));
 
 // if(localStorage.getItem("2022;8;16.1-1")){
 //     console.log("its here!");
