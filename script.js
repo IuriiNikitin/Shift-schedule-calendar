@@ -1,5 +1,6 @@
 "use strict";
 
+import renderGraphicValues from "./render_graphic_values.js";
 import findSalary from "./find-salary.js";
 import findHolidays from "./find-holidays.js";
 import {showElement, hideElement} from "./show-hide-element.js";
@@ -7,8 +8,13 @@ import dayTypes from "./day-types-data.js";
 import dayTime from "./day-times-data.js";
 import roundHours from "./round-hours.js";
 
-const graphic = document.getElementById("graphic");
+import { isObject } from "./deep-merge-objects.js";
+import { mergeDeep } from "./deep-merge-objects.js";
 
+
+
+const graphic = document.getElementById("graphic");
+renderGraphicValues();
 
 
 function getGraphic(year, month, graphic) { //смены 14.1, 14.2, 16.1-1, 16.1-2, 16.2-1, 16.2-2;
@@ -232,7 +238,8 @@ if(localStorage.getItem(`${year}:${month}:${graphic}`)) {
     for(let day in lsData) {
 
         // graphicD[+day - 1] = Object.assign(graphicD[+day - 1], lsData[day]);
-        graphicD[+day - 1] = {...graphicD[+day - 1], ...lsData[day]};
+        // graphicD[+day - 1] = {...graphicD[+day - 1], ...lsData[day]};
+        graphicD[+day - 1] = mergeDeep(graphicD[+day - 1], lsData[day]);
 
         if(graphicD[+day - 1].time) {
 
@@ -428,6 +435,7 @@ function renderMonths(id = "calendar") {
 
 graphic.addEventListener("change", (e) => {
     renderCalendar(getYear(), getMonth(), e.target.value);
+    localStorage.setItem("current_graphic", e.target.value);
 });
 
 
@@ -633,14 +641,14 @@ function renderTimeMenu(num, timeType) {
 
 // const abc = {
 //     6: {
-//         actualType: "cal-mdg",
+//         actualType: "cal-ndg",
 //         descr: "descr",
 //         name: "exampl",
 //         holiday: true,
 //         time: {
 //             actual:{
-//                 shift:["07:20" , "19:00"],
-//                 break:[["11:30", "12:10"], ["16:00", "16:18"]]
+//                 shift:["07:20", "20:00"],
+//                 break:[["11:30", "12:20"], ["16:00", "16:18"]]
 //             },
 //             graphic:{
 //                 shift:["07:20" , "20:00"],
