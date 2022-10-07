@@ -1,8 +1,8 @@
-export function isObject(item) {
+export default function mergeDeep(target, ...sources) {
+  function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
   }
-
-export function mergeDeep(target, ...sources) {
+  
     if (!sources.length) return target;
     const source = sources.shift();
 
