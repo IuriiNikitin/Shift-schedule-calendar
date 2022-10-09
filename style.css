@@ -270,3 +270,7 @@
   width: 75px;
   height: 24px;
 }
+
+.modal_data .calendar_wrapper {
+  height: 460px;
+}

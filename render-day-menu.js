@@ -4,6 +4,7 @@ import renderTimeMenu from "./render-time-menu.js";
 import { getMonth, getYear } from "./get-month-get-year.js";
 import roundHours from "./round-hours.js";
 import { showElement, hideElement } from "./show-hide-element.js";
+import setDaySettings from "./set-day-settings.js";
 
 export default function renderDayMenu(num) {
 
@@ -104,7 +105,9 @@ if(day.time) {
         renderTimeMenu(num, "graphic");
     });
 }
-
+dayMenu.querySelector(".note").querySelector("textarea").addEventListener("input", (e) => {
+    setDaySettings(num, {note:e.target.value});
+});
 }
 
 
