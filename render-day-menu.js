@@ -1,6 +1,7 @@
 import getGraphic from "./get-graphic.js";
 import dayTypes from "./day-types-data.js";
 import renderTimeMenu from "./render-time-menu.js";
+import renderCalendar from "./render-calendar.js";
 import { getMonth, getYear } from "./get-month-get-year.js";
 import roundHours from "./round-hours.js";
 import { showElement, hideElement } from "./show-hide-element.js";
@@ -108,6 +109,13 @@ if(day.time) {
 dayMenu.querySelector(".note").querySelector("textarea").addEventListener("input", (e) => {
     setDaySettings(num, {note:e.target.value});
 });
+
+dayMenu.querySelector(".holiday_checkbox").querySelector("input[type='checkbox']").addEventListener("change", (e) => {
+    // console.log(e.target.checked);
+    setDaySettings(num, {holiday:e.target.checked});
+    renderCalendar(year, month, graphic.value);
+});
+
 }
 
 
