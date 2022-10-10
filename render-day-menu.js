@@ -3,7 +3,7 @@ import dayTypes from "./day-types-data.js";
 import renderTimeMenu from "./render-time-menu.js";
 import renderCalendar from "./render-calendar.js";
 import { getMonth, getYear } from "./get-month-get-year.js";
-import roundHours from "./round-hours.js";
+import getTimeInfo from "./get-time-info.js";
 import { showElement, hideElement } from "./show-hide-element.js";
 import setDaySettings from "./set-day-settings.js";
 
@@ -31,8 +31,7 @@ export default function renderDayMenu(num) {
             div = `
             <div class=${timeType}>
                 ${day.time[timeType].shift[0]}-${day.time[timeType].shift[1]} 
-                ( ${Math.trunc(day.finalTime[timeType])}ч ${roundHours((day.finalTime[timeType] % 1) * 60)}м |
-                ${day.finalTime[timeType]}ч )
+                ( ${getTimeInfo(day.finalTime[timeType])} )
             </div>`
         } else {
             div = "<div class='disable'>00:00-00:00 ( 0ч 0м | 0ч )</div>";
@@ -108,10 +107,10 @@ if(day.time) {
 }
 dayMenu.querySelector(".note").querySelector("textarea").addEventListener("input", (e) => {
     setDaySettings(num, {note:e.target.value});
+    renderCalendar(year, month, graphic.value);
 });
 
 dayMenu.querySelector(".holiday_checkbox").querySelector("input[type='checkbox']").addEventListener("change", (e) => {
-    // console.log(e.target.checked);
     setDaySettings(num, {holiday:e.target.checked});
     renderCalendar(year, month, graphic.value);
 });

@@ -35,10 +35,11 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
         if(days[i].today) {clazz += " today"};
         if(days[i].salary) {icons += "<img src='./img/rouble.svg' alt='rouble'>"};
         if(days[i].holiday) {icons += "<img src='./img/holiday.svg' alt='holiday'>"};
+        if(days[i].note) {icons += "<img src='./img/note.svg' alt='note'>"};
 
         calendar += `<td class="day ${clazz}"><div>${num}</div><div>${name}</div>`;
 
-        if(days[i].salary || days[i].holiday) {calendar += icons}
+        if(days[i].salary || days[i].holiday || days[i].note) {calendar += icons}
         if(days[i].dayWeek === 7) {calendar += "<tr>"}
 
     }

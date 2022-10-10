@@ -217,23 +217,23 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     }
     
     
-    console.log(graphicD);
+    // console.log(graphicD);
+
+    const key = `${year}:${month}:${graphic}`;
+
+    if(localStorage.getItem(key)) {
     
-    
-    if(localStorage.getItem(`${year}:${month}:${graphic}`)) {
-    
-        const lsData = JSON.parse(localStorage.getItem(`${year}:${month}:${graphic}`));
+        const lsData = JSON.parse(localStorage.getItem(key));
     
         for(let day in lsData) {
+
+            const dayIndex = +day - 1;
+            graphicD[dayIndex] = mergeDeep(graphicD[dayIndex], lsData[day]);
     
-            // graphicD[+day - 1] = Object.assign(graphicD[+day - 1], lsData[day]);
-            // graphicD[+day - 1] = {...graphicD[+day - 1], ...lsData[day]};
-            graphicD[+day - 1] = mergeDeep(graphicD[+day - 1], lsData[day]);
-    
-            if(graphicD[+day - 1].time) {
-    
-                graphicD[+day - 1].calcTime = calcTime;
-                graphicD[+day - 1].calcTime();
+            
+            if(graphicD[dayIndex].time) {
+                graphicD[dayIndex].calcTime = calcTime;
+                graphicD[dayIndex].calcTime();
             }
         }
     

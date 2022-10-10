@@ -1,7 +1,7 @@
 import getGraphic from "./get-graphic.js";
 import { getMonth, getYear } from "./get-month-get-year.js";
-import roundHours from "./round-hours.js";
 import { showElement, hideElement } from "./show-hide-element.js";
+import getTimeInfo from "./get-time-info.js";
 
 export default function renderTimeMenu(num, timeType) {
 
@@ -56,9 +56,7 @@ export default function renderTimeMenu(num, timeType) {
                 ${breakTimeHtml}
 
                 <div class="time_menu_total_time">Итого : 
-                ( ${Math.trunc(day.finalTime[timeType])}ч 
-                ${roundHours((day.finalTime[timeType] % 1) * 60)}м |
-                ${day.finalTime[timeType]}ч )</div>
+                ( ${getTimeInfo(day.finalTime[timeType])} )</div>
 
                 </div>
                 <div class="time_menu_btns">

@@ -2,10 +2,10 @@ export default function mergeDeep(target, ...sources) {
   function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
   }
-  
+
     if (!sources.length) return target;
     const source = sources.shift();
-
+    
     if (isObject(target) && isObject(source)) {
       for (const key in source) {
         if (isObject(source[key])) {
