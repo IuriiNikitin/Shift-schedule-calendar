@@ -10,6 +10,8 @@ import { getYear, getMonth } from "./get-month-get-year.js";
 const graphic = document.getElementById("graphic");
 
 
+
+
 renderGraphicValues();
 renderCalendar(new Date().getFullYear(), new Date().getMonth(), graphic.value);
 
@@ -19,6 +21,28 @@ graphic.addEventListener("change", (e) => {
     localStorage.setItem("current_graphic", e.target.value);
 });
 
+
+function updateCalendar() {
+
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1,);
+    const timeUntilTomorrow = tomorrow - now;
+
+    setTimeout(() => {
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+        const calendarMonth = getMonth();
+        const calendarYear = getYear();
+
+        if(currentMonth === calendarMonth && currentYear === calendarYear) {
+            renderCalendar(new Date().getFullYear(),  new Date().getMonth(), graphic.value);
+        }
+        updateCalendar();
+    }, timeUntilTomorrow)
+
+}
+
+updateCalendar();
 
 
 const gr = {
@@ -81,14 +105,15 @@ function isSameArr(arr1, arr2) {
 function cleeningLs(lsObj, grObj) {
 
     for(let key in lsObj) {
-        // console.log(grObj[key]);
-        // console.log(isObject(grObj[key]));
 
             if(isObject(grObj[key]) ){
+
+
                 cleeningLs(lsObj[key], grObj[key]);
             } else if(Array.isArray(grObj[key])) {
 
-                console.log(grObj[key]);
+
+
                 if(Array.isArray(grObj[key][0])) {
                     for( let i = 0 ; grObj[key].length > i ; i++ ) {
                         if(isSameArr(grObj[key][i], lsObj[key][i])) {
@@ -96,6 +121,9 @@ function cleeningLs(lsObj, grObj) {
                         }
                     }
                     lsObj[key] =  lsObj[key].filter(Boolean);
+                    if(!lsObj[key].length) {delete lsObj[key]};
+                    
+
                 } else {
                     if(isSameArr(grObj[key], lsObj[key])) {
                         delete lsObj[key];
@@ -114,6 +142,7 @@ function cleeningLs(lsObj, grObj) {
 
             }
     }
+
 }
 
 cleeningLs(ls, gr);

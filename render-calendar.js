@@ -40,6 +40,7 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
         calendar += `<td class="day ${clazz}"><div>${num}</div><div>${name}</div>`;
 
         if(days[i].salary || days[i].holiday || days[i].note) {calendar += icons}
+        
         if(days[i].dayWeek === 7) {calendar += "<tr>"}
 
     }
