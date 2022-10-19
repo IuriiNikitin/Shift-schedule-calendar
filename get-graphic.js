@@ -2,8 +2,10 @@ import dayTypes from "./day-types-data.js";
 import dayTime from "./day-times-data.js";
 import findHolidays from "./find-holidays.js";
 import findSalary from "./find-salary.js";
+import isEmpty from "./is-empty.js";
 
 import mergeDeep from "./deep-merge-objects.js";
+import deleteSameValues from "./delete-same-values.js";
 
 
 export default function getGraphic(year, month, graphic) { //смены 14.1, 14.2, 16.1-1, 16.1-2, 16.2-1, 16.2-2;
@@ -116,39 +118,25 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
     const dayOff = {
         ...dayTypes.find(day => day.actualType === "day-off"),
+        graphicType: "day-off",
         note:"",
+        holiday: false,
     };
     
     const morningDay = {
         ...dayTypes.find(day => day.actualType === "cal-mdg"),
-        time: {
-            actual: {
-                shift: dayTime.morning12h.shift,
-                break: dayTime.morning12h.break,
-            },
-            graphic: {
-                shift: dayTime.morning12h.shift,
-                break: dayTime.morning12h.break,
-            },
-        },
+        graphicType: "cal-mdg",
         calcTime:calcTime,
         note:"",
+        holiday: false,
     };
     
     const nightDay = {
         ...dayTypes.find(day => day.actualType === "cal-ndg"),
-        time: {
-            actual: {
-                shift: dayTime.night12h.shift,
-                break: dayTime.night12h.break,
-            },
-            graphic: {
-                shift: dayTime.night12h.shift,
-                break: dayTime.night12h.break,
-            },
-        },
+        graphicType: "cal-ndg",
         calcTime:calcTime,
         note:"",
+        holiday: false,
     };
     
     function daysPlus(date, days) {
@@ -228,14 +216,26 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         for(let day in lsData) {
 
             const dayIndex = +day - 1;
+            
+            deleteSameValues(lsData[day], graphicD[dayIndex]);
+            if(isEmpty(lsData[day])) {
+                delete lsData[day]
+            } else {
             graphicD[dayIndex] = mergeDeep(graphicD[dayIndex], lsData[day]);
-    
+            }
             
             if(graphicD[dayIndex].time) {
                 graphicD[dayIndex].calcTime = calcTime;
                 graphicD[dayIndex].calcTime();
             }
         }
+
+        if(isEmpty(lsData)) {
+            localStorage.removeItem(key);
+        } else {
+            localStorage.setItem(key, JSON.stringify(lsData));
+        }
+
     
     }
     

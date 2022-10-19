@@ -114,6 +114,11 @@ dayMenu.querySelector(".holiday_checkbox").querySelector("input[type='checkbox']
     setDaySettings(num, {holiday:e.target.checked});
     renderCalendar(year, month, graphic.value);
 });
+dayMenu.querySelector("select").addEventListener("change", (e) => {
+    setDaySettings(num, dayTypes.find(day => day.actualType === e.target.value));
+    renderCalendar(year, month, graphic.value);
+    renderDayMenu(num);
+});
 
 }
 

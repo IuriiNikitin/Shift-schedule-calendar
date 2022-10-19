@@ -1,7 +1,6 @@
+import isObject from "./is-object.js";
+
 export default function mergeDeep(target, ...sources) {
-  function isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
-  }
 
     if (!sources.length) return target;
     const source = sources.shift();
