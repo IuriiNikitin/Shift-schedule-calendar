@@ -1,5 +1,4 @@
 import dayTypes from "./day-types-data.js";
-import dayTime from "./day-times-data.js";
 import findHolidays from "./find-holidays.js";
 import findSalary from "./find-salary.js";
 import isEmpty from "./is-empty.js";
@@ -43,6 +42,17 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     }
     
     function calcTime() {
+
+        switch (this.actualType) {
+            case "day-off":
+            case "cal-sick":
+            case "cal-vac":
+            case "day-off-oex":
+                delete this.time;
+                delete this.dates;
+                delete this.finalTime;
+                return;
+        }
     
         const convertTime = (timeArray) => {
             const start = timeArray[0];
@@ -239,6 +249,8 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
     }
     
+    console.log(graphicD);
+
     return graphicD;
     }
 

@@ -29,6 +29,7 @@ const dayTypes = [
         actualType:"day-off",
         name:"Выход",
         descr:"Выходной день",
+        time: null,
         possibleTypes:["cal-omd", "cal-ond", "cal-sick", "cal-vac"],
     },
     {
@@ -47,14 +48,14 @@ const dayTypes = [
     },
     {
         actualType:"cal-omd",
-        name:"Сверх(Д)",
+        name:"Свер(д)",
         descr:"Сверхурочная дневная смена",
         time: defaultTimeData.morning,
         possibleTypes:["cal-ond", "day-off", "cal-sick", "cal-vac"],
     },
     {
         actualType:"cal-ond",
-        name:"Сверх(Н)",
+        name:"Свер(н)",
         descr:"Сверхурочная ночная смена",
         time: defaultTimeData.night,
         possibleTypes:["cal-omd", "day-off", "cal-sick", "cal-vac"],
@@ -63,19 +64,19 @@ const dayTypes = [
         actualType:"cal-sick",
         name:"Боль",
         descr:"Больничный",
-        // possibleTypes:this.graphicType,
+        time: null,
     },
     {
         actualType:"cal-vac",
         name:"Отпуск",
         descr:"Отпуск",
-        // possibleTypes:[this.graphicType],
+        time: null,
     },
     {
         actualType:"day-off-oex",
         name:"За свой",
         descr:"За свой счёт",
-        // possibleTypes:[this.graphicType],
+        time: null,
     }
 ];
 
