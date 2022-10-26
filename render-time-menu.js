@@ -70,6 +70,12 @@ export default function renderTimeMenu(num, timeType) {
     timeMenu.innerHTML = timeMenuContent;
     showElement(timeMenu);
 
+    timeMenu.querySelectorAll("input").forEach(input => {
+        input.addEventListener("change", () => {
+            console.log(timeType ,"time changed!");
+        });
+    });
+
     timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[1].addEventListener("click", () => {
         hideElement(timeMenu);
         timeMenu.innerHTML = "";

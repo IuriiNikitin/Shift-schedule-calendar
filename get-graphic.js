@@ -131,6 +131,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         graphicType: "day-off",
         note:"",
         holiday: false,
+        possibleTypes:["cal-omd", "cal-ond", "cal-sick", "cal-vac"],
     };
     
     const morningDay = {
@@ -139,6 +140,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         calcTime:calcTime,
         note:"",
         holiday: false,
+        possibleTypes:["cal-ndg", "cal-sick", "cal-vac", "day-off-oex"],
     };
     
     const nightDay = {
@@ -147,6 +149,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         calcTime:calcTime,
         note:"",
         holiday: false,
+        possibleTypes:["cal-mdg", "cal-sick", "cal-vac", "day-off-oex"],
     };
     
     function daysPlus(date, days) {
@@ -168,6 +171,11 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
             findHolidays(date, (annotation) => {day.holiday = true; day.annotation = annotation;});
             findSalary(date, () => {day.salary = true;});
+
+            // if(day.holiday && day.graphicType !== "day-off") {
+
+            //     day.possibleTypes.push("day-off");
+            // };
     
             graphicD.push(day);
         }
@@ -215,7 +223,6 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     }
     
     
-    // console.log(graphicD);
 
     const key = `${year}:${month}:${graphic}`;
 
@@ -249,7 +256,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
     }
     
-    console.log(graphicD);
+    // console.log(graphicD);
 
     return graphicD;
     }

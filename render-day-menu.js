@@ -18,12 +18,26 @@ export default function renderDayMenu(num) {
     let holidayCheckbox = "<input type='checkbox' ";
     let holidayAnnotation = "";
 
-    let dayTypeOptions = `<option value=${day.actualType} selected>${day.descr}`
+    const graphicTypeDescr =  dayTypes.find(type => type.actualType === day.graphicType).descr;
+
+    let dayTypeOptions = `<option value=${day.graphicType}>${graphicTypeDescr}`;
+    // if(day.actualType === day.graphicType) {dayTypeOptions += "selected"};
+    // dayTypeOptions += `>${graphicTypeDescr}`;
 
     day.possibleTypes.forEach(type => {
        const option = dayTypes.find(day => day.actualType === type);
-       dayTypeOptions += `<option value=${type}>${option.descr}`
+
+       dayTypeOptions += `<option value=${type} `;
+
+       if(day.actualType === type) {dayTypeOptions += "selected"};
+
+       dayTypeOptions += `>${option.descr}`;
     });
+
+    // if(day.holiday && day.graphicType !== "day-off") {
+    //     const option = dayTypes.find(day => day.actualType === "day-off");
+    //     dayTypeOptions += `<option value=${option.actualType}>${option.descr}`;
+    // }
 
     function getTimeDiv(timeType) {
         let div;
@@ -113,6 +127,7 @@ dayMenu.querySelector(".note").querySelector("textarea").addEventListener("input
 dayMenu.querySelector(".holiday_checkbox").querySelector("input[type='checkbox']").addEventListener("change", (e) => {
     setDaySettings(num, {holiday:e.target.checked});
     renderCalendar(year, month, graphic.value);
+    renderDayMenu(num);
 });
 dayMenu.querySelector("select").addEventListener("change", (e) => {
     setDaySettings(num, dayTypes.find(day => day.actualType === e.target.value));
