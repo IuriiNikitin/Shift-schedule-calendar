@@ -2,6 +2,9 @@ import getGraphic from "./get-graphic.js";
 import { getMonth, getYear } from "./get-month-get-year.js";
 import { showElement, hideElement } from "./show-hide-element.js";
 import getTimeInfo from "./get-time-info.js";
+import setDaySettings from "./set-day-settings.js";
+import calcFinalTime from "./calc-final-time.js";
+import convertTimeArr from "./convert-time-arr.js";
 
 export default function renderTimeMenu(num, timeType) {
 
@@ -66,13 +69,35 @@ export default function renderTimeMenu(num, timeType) {
         </div>
     </div>`
 
-
     timeMenu.innerHTML = timeMenuContent;
     showElement(timeMenu);
 
+    function getTimeArr() {
+        const shiftArr = [];
+        const breakArr = [];
+
+        timeMenu.querySelector(".shift").querySelectorAll("input").forEach(item => {
+            shiftArr.push(item.value);
+        });
+
+        timeMenu.querySelectorAll(".break").forEach((item, i) => {
+            breakArr[i] = [];
+            item.querySelectorAll("input").forEach(input => {
+                breakArr[i].push(input.value);
+            });
+        });
+
+        return {break:breakArr, shift:shiftArr};
+    }
+
     timeMenu.querySelectorAll("input").forEach(input => {
         input.addEventListener("change", () => {
-            console.log(timeType ,"time changed!");
+            const newTime =  getTimeArr();
+            const newShiftDates = convertTimeArr(newTime.shift, day.date);
+            const newBreakDates = convertTimeArr(newTime.break, day.date);
+            const newTotalTime = calcFinalTime(newShiftDates, newBreakDates);
+            timeMenu.querySelector(".time_menu_total_time").innerHTML = `
+            Итого : ( ${getTimeInfo(newTotalTime)} )`;
         });
     });
 

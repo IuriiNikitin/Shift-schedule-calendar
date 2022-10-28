@@ -34,11 +34,6 @@ export default function renderDayMenu(num) {
        dayTypeOptions += `>${option.descr}`;
     });
 
-    // if(day.holiday && day.graphicType !== "day-off") {
-    //     const option = dayTypes.find(day => day.actualType === "day-off");
-    //     dayTypeOptions += `<option value=${option.actualType}>${option.descr}`;
-    // }
-
     function getTimeDiv(timeType) {
         let div;
         if(timeType) {

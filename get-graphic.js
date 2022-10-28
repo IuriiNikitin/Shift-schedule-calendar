@@ -2,6 +2,10 @@ import dayTypes from "./day-types-data.js";
 import findHolidays from "./find-holidays.js";
 import findSalary from "./find-salary.js";
 import isEmpty from "./is-empty.js";
+import deepCopy from "./deep-copy.js"
+import calcFinalTime from "./calc-final-time.js";
+import daysPlus from "./days-plus.js";
+import convertTimeArr from "./convert-time-arr.js";
 
 import mergeDeep from "./deep-merge-objects.js";
 import deleteSameValues from "./delete-same-values.js";
@@ -10,7 +14,7 @@ import deleteSameValues from "./delete-same-values.js";
 export default function getGraphic(year, month, graphic) { //смены 14.1, 14.2, 16.1-1, 16.1-2, 16.2-1, 16.2-2;
 
     const graphicD = [];
-    
+    // if(year < 2000) { year = 2000};
     const now = new Date(year, month);
     const currentYear = now.getFullYear(); // Текущий год
     const currentMonth = now.getMonth(); // Текущий месяц
@@ -53,79 +57,36 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
                 delete this.finalTime;
                 return;
         }
-    
-        const convertTime = (timeArray) => {
-            const start = timeArray[0];
-            const end = timeArray[1];
-            const startHours = +start.split(":")[0];
-            const startMinutes = +start.split(":")[1];
-            const endHours = +end.split(":")[0];
-            const endMinutes = +end.split(":")[1];
-    
-            let startDate = new Date(new Date(this.date).setHours(startHours,[startMinutes]));
-            let endDate = new Date(new Date(this.date).setHours(endHours,[endMinutes]));
-    
-            if(startHours > endHours) { endDate = new Date(daysPlus(endDate, 1));}
-    
-            if(startHours < 4) {
-                startDate =  new Date(daysPlus(startDate, 1));
-                endDate = new Date(daysPlus(endDate, 1));
-            }
-            return [startDate, endDate];
-        }
-        
-        const convertTimeArr = (timeArrArr) => {
-            let result;
-    
-            if (Array.isArray(timeArrArr[0])) {
-                result = [];
-                timeArrArr.forEach(item => { result.push(convertTime(item)); });
-            } else { result = convertTime(timeArrArr); }
-            
-            return result;
-        }
-    
+
+
         const dates = {};
     
         for (let key in this.time) { // actual graphic
             if (Array.isArray(this.time[key])) {
-                dates[key] = convertTimeArr(this.time[key]);
+                dates[key] = convertTimeArr(this.time[key], this.date);
             } else {
                 dates[key] = {};
                 for (let key1 in this.time[key]) { // break shift
-                    dates[key][key1] = convertTimeArr(this.time[key][key1]);
+                    dates[key][key1] = convertTimeArr(this.time[key][key1], this.date);
                 }
             }
         }
     
         this.dates = dates;
     
-        function calcFinalTime(shiftDatesArr, breakDatesArr) {
-    
-            let finalTime = shiftDatesArr[1] - shiftDatesArr[0];
-    
-            breakDatesArr.forEach(breakDates => {
-    
-            if(breakDates[0] >= shiftDatesArr[0] && breakDates[1] <= shiftDatesArr[1]) {
-                finalTime -= breakDates[1] - breakDates[0];
-            }
-            if(breakDates[0] < shiftDatesArr[0] && breakDates[1] > shiftDatesArr[0]) {
-                finalTime -= breakDates[1] - shiftDates[0];
-            }
-            if(breakDates[0] < shiftDatesArr[1] && breakDates[1] > shiftDatesArr[1]) {
-                finalTime -= shiftDates[1] - breakDates[0];
-            }
-            });
-    
-            return (finalTime / 1000) / 60 / 60;
-        }
     
         this.finalTime = {};
         this.finalTime.actual = calcFinalTime(dates.actual.shift, dates.actual.break);
         this.finalTime.graphic = calcFinalTime(dates.graphic.shift, dates.graphic.break);
     
     }
-    
+    function checkHoliday() {
+        if(this.holiday) {
+            this.possibleTypes = deepCopy(this.possibleTypes);
+            this.possibleTypes.push("day-off");
+        }
+    }
+
     const dayOff = {
         ...dayTypes.find(day => day.actualType === "day-off"),
         graphicType: "day-off",
@@ -138,6 +99,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         ...dayTypes.find(day => day.actualType === "cal-mdg"),
         graphicType: "cal-mdg",
         calcTime:calcTime,
+        checkHoliday:checkHoliday,
         note:"",
         holiday: false,
         possibleTypes:["cal-ndg", "cal-sick", "cal-vac", "day-off-oex"],
@@ -147,14 +109,13 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         ...dayTypes.find(day => day.actualType === "cal-ndg"),
         graphicType: "cal-ndg",
         calcTime:calcTime,
+        checkHoliday:checkHoliday,
         note:"",
         holiday: false,
         possibleTypes:["cal-mdg", "cal-sick", "cal-vac", "day-off-oex"],
     };
     
-    function daysPlus(date, days) {
-        return date.setDate(date.getDate() + days);
-    }
+
     
     function addDay(date, spread) {
         if (date <= finishDate && date >= firstDate) {
@@ -165,17 +126,14 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
                 ...spread,
             };
     
-            if (day.calcTime) { day.calcTime(); }
-    
             if (day.date.toLocaleDateString() === new Date().toLocaleDateString()) { day.today = true; }
     
             findHolidays(date, (annotation) => {day.holiday = true; day.annotation = annotation;});
             findSalary(date, () => {day.salary = true;});
 
-            // if(day.holiday && day.graphicType !== "day-off") {
+            if (day.calcTime) { day.calcTime(); }
+            if (day.checkHoliday) { day.checkHoliday(); }
 
-            //     day.possibleTypes.push("day-off");
-            // };
     
             graphicD.push(day);
         }
@@ -235,15 +193,19 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
             const dayIndex = +day - 1;
             
             deleteSameValues(lsData[day], graphicD[dayIndex]);
+
             if(isEmpty(lsData[day])) {
                 delete lsData[day]
             } else {
-            graphicD[dayIndex] = mergeDeep(graphicD[dayIndex], lsData[day]);
+                graphicD[dayIndex] = mergeDeep(graphicD[dayIndex], lsData[day]);
             }
             
             if(graphicD[dayIndex].time) {
                 graphicD[dayIndex].calcTime = calcTime;
                 graphicD[dayIndex].calcTime();
+            }
+            if(graphicD[dayIndex].holiday && graphicD[dayIndex].graphicType !== "day-off") {
+                graphicD[dayIndex].checkHoliday();
             }
         }
 
@@ -256,7 +218,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
     }
     
-    // console.log(graphicD);
+    console.log(graphicD);
 
     return graphicD;
     }
