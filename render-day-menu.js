@@ -121,6 +121,7 @@ dayMenu.querySelector(".note").querySelector("textarea").addEventListener("input
 
 dayMenu.querySelector(".holiday_checkbox").querySelector("input[type='checkbox']").addEventListener("change", (e) => {
     setDaySettings(num, {holiday:e.target.checked});
+    // if(!day.holiday && day.actualType === "day-off") {console.log("abc")}
     renderCalendar(year, month, graphic.value);
     renderDayMenu(num);
 });

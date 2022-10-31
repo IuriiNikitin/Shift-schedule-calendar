@@ -5,6 +5,8 @@ import getTimeInfo from "./get-time-info.js";
 import setDaySettings from "./set-day-settings.js";
 import calcFinalTime from "./calc-final-time.js";
 import convertTimeArr from "./convert-time-arr.js";
+import renderDayMenu from "./render-day-menu.js";
+import dayTypes from "./day-types-data.js";
 
 export default function renderTimeMenu(num, timeType) {
 
@@ -104,7 +106,22 @@ export default function renderTimeMenu(num, timeType) {
     timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[1].addEventListener("click", () => {
         hideElement(timeMenu);
         timeMenu.innerHTML = "";
-    })
+    });
+
+    timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[2].addEventListener("click", () => {
+        const newTime =  getTimeArr();
+        setDaySettings(num, {time:{[timeType]:newTime}});
+        renderDayMenu(num);
+        hideElement(timeMenu);
+        timeMenu.innerHTML = "";
+    });
+
+    timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[0].addEventListener("click", () => {
+        setDaySettings(num, {time:dayTypes.find(type => type.actualType === day.actualType).time});
+        renderDayMenu(num);
+        renderTimeMenu(num, timeType);
+    });
 }
 
 // renderTimeMenu(5, "actual");
+

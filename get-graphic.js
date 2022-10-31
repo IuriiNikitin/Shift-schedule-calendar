@@ -81,7 +81,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
     }
     function checkHoliday() {
-        if(this.holiday) {
+        if(this.holiday && !this.possibleTypes.find(type => type === "day-off")) {
             this.possibleTypes = deepCopy(this.possibleTypes);
             this.possibleTypes.push("day-off");
         }
@@ -187,17 +187,20 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     if(localStorage.getItem(key)) {
     
         const lsData = JSON.parse(localStorage.getItem(key));
-    
+
         for(let day in lsData) {
 
             const dayIndex = +day - 1;
-            
+            graphicD[dayIndex].time = deepCopy(graphicD[dayIndex].time);
             deleteSameValues(lsData[day], graphicD[dayIndex]);
+            
 
             if(isEmpty(lsData[day])) {
-                delete lsData[day]
+                delete lsData[day];
             } else {
+
                 graphicD[dayIndex] = mergeDeep(graphicD[dayIndex], lsData[day]);
+
             }
             
             if(graphicD[dayIndex].time) {
