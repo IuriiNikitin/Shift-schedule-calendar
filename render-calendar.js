@@ -29,17 +29,20 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
     for(let i = 0; i < days.length; i++) {
 
         let clazz = days[i].actualType;
-        let icons = "<div class='icons'>"
+        let iconsTop = "<div class='icons_top'>";
+        let iconsBottom = "<div class='icons_bottom'>";
         const num = days[i].date.getDate();
         const name = days[i].name;
         if(days[i].today) {clazz += " today"};
-        if(days[i].salary) {icons += "<img src='./img/rouble.svg' alt='rouble'>"};
-        if(days[i].holiday) {icons += "<img src='./img/holiday.svg' alt='holiday'>"};
-        if(days[i].note) {icons += "<img src='./img/note.svg' alt='note'>"};
+        if(days[i].salary) {iconsTop += "<img src='./img/rouble.svg' alt='rouble'>"};
+        if(days[i].holiday) {iconsTop += "<img src='./img/holiday.svg' alt='holiday'>"};
+        if(days[i].note) {iconsBottom += "<img src='./img/note.svg' alt='note'>"};
+        if(days[i].timeChanged) {iconsBottom += "<img src='./img/clock.svg' alt='clock'>"};
 
         calendar += `<td class="day ${clazz}"><div>${num}</div><div>${name}</div>`;
 
-        if(days[i].salary || days[i].holiday || days[i].note) {calendar += icons}
+        if(days[i].salary || days[i].holiday) {calendar += iconsTop + "</div>"};
+        if (days[i].note || days[i].timeChanged) {calendar += iconsBottom};
         
         if(days[i].dayWeek === 7) {calendar += "<tr>"}
 

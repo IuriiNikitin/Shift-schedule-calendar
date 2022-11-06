@@ -1,4 +1,5 @@
 import getGraphic from "./get-graphic.js";
+import renderCalendar from "./render-calendar.js";
 import { getMonth, getYear } from "./get-month-get-year.js";
 import { showElement, hideElement } from "./show-hide-element.js";
 import getTimeInfo from "./get-time-info.js";
@@ -108,18 +109,27 @@ export default function renderTimeMenu(num, timeType) {
         timeMenu.innerHTML = "";
     });
 
+    timeMenu.addEventListener("click", (e) => {
+        if(e.target && e.target.matches(".time_menu")) {
+            hideElement(timeMenu);
+            timeMenu.innerHTML = ""; 
+        }
+    });
+
     timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[2].addEventListener("click", () => {
         const newTime =  getTimeArr();
         setDaySettings(num, {time:{[timeType]:newTime}});
         renderDayMenu(num);
+        renderCalendar(year, month, graphic.value);
         hideElement(timeMenu);
         timeMenu.innerHTML = "";
     });
 
     timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[0].addEventListener("click", () => {
-        setDaySettings(num, {time:dayTypes.find(type => type.actualType === day.actualType).time});
+        setDaySettings(num, {time:{[timeType]:dayTypes.find(type => type.actualType === day.actualType).time[timeType]}});
         renderDayMenu(num);
         renderTimeMenu(num, timeType);
+        renderCalendar(year, month, graphic.value);
     });
 }
 

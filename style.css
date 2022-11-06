@@ -17,12 +17,18 @@
   background-clip:padding-box;
 }
 
-#calendar .cal-mdg, #calendar .cal-omd {
+#calendar .cal-mdg{
   background-color :#fff56d;
 }
+#calendar .cal-omd {
+  background-color:#ffd16d;
+}
 
-#calendar .cal-ndg, #calendar .cal-ond {
-  background-color :#6b6cb2;
+#calendar .cal-ndg {
+  background-color :#6d6dff;
+}
+#calendar .cal-ond {
+  background-color :#6d6ddc; 
 }
 
 #calendar .cal-sick {
@@ -74,14 +80,20 @@
   height: 15px;
 }
 
-#calendar .icons {
+#calendar .icons_bottom {
   display: flex;
   position: absolute;
   bottom: 4px;
   left: 2px;
 }
-#calendar .icons img {
-  height: 12px;
+#calendar .icons_top {
+  display: flex;
+  position: absolute;
+  top: 4px;
+  left: 2px;
+}
+#calendar .icons_top img, #calendar .icons_bottom img {
+  height: 11px;
   margin: 0 2px;
 }
 #graphic {
@@ -193,7 +205,13 @@
 
 
 .day_menu .actual, .day_menu .graphic {
+  display: flex;
+  justify-content: space-between;
   cursor: pointer;
+}
+.day_menu_data .graphic_time img, .day_menu_data .actual_time img {
+  height: 15px;
+
 }
 
 .time_menu {
@@ -281,3 +299,4 @@
 .modal_data .calendar_wrapper {
   height: 460px;
 }
+

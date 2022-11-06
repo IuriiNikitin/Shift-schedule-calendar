@@ -58,7 +58,6 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
                 return;
         }
 
-
         const dates = {};
     
         for (let key in this.time) { // actual graphic
@@ -71,15 +70,15 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
                 }
             }
         }
-    
+
         this.dates = dates;
-    
     
         this.finalTime = {};
         this.finalTime.actual = calcFinalTime(dates.actual.shift, dates.actual.break);
         this.finalTime.graphic = calcFinalTime(dates.graphic.shift, dates.graphic.break);
-    
     }
+
+
     function checkHoliday() {
         if(this.holiday && !this.possibleTypes.find(type => type === "day-off")) {
             this.possibleTypes = deepCopy(this.possibleTypes);
@@ -130,14 +129,17 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
             findHolidays(date, (annotation) => {day.holiday = true; day.annotation = annotation;});
             findSalary(date, () => {day.salary = true;});
-
-            if (day.calcTime) { day.calcTime(); }
-            if (day.checkHoliday) { day.checkHoliday(); }
-
     
             graphicD.push(day);
         }
     }
+
+    function addDays(date, sprade, num) {
+        for(let i = 0; i < num; i++) {
+            i > 0 ? addDay(daysPlus(date, 1), sprade) : addDay(date, sprade);
+        }
+    daysPlus(date, 1);
+}
     
      function findStartDate(daysInCycle) {
     
@@ -152,31 +154,19 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
         findStartDate(6);
     
-        for (startDate; startDate <= finishDate; daysPlus(startDate, 1)) {
-            addDay(startDate, morningDay);
-            addDay(daysPlus(startDate, 1), morningDay);
-            addDay(daysPlus(startDate, 1), morningDay);
-            addDay(daysPlus(startDate, 1), dayOff);
-            addDay(daysPlus(startDate, 1), dayOff);
-            addDay(daysPlus(startDate, 1), dayOff);
+        for (startDate; startDate <= finishDate;) {
+            addDays(startDate, morningDay, 3);
+            addDays(startDate, dayOff, 3);
         }
     } else {
     
         findStartDate(12);
     
-        for (startDate; startDate <= finishDate; daysPlus(startDate, 1)) {
-            addDay(startDate, morningDay);
-            addDay(daysPlus(startDate, 1), morningDay);
-            addDay(daysPlus(startDate, 1), morningDay);
-            addDay(daysPlus(startDate, 1), dayOff);
-            addDay(daysPlus(startDate, 1), dayOff);
-            addDay(daysPlus(startDate, 1), dayOff);
-            addDay(daysPlus(startDate, 1), nightDay);
-            addDay(daysPlus(startDate, 1), nightDay);
-            addDay(daysPlus(startDate, 1), nightDay);
-            addDay(daysPlus(startDate, 1), dayOff);
-            addDay(daysPlus(startDate, 1), dayOff);
-            addDay(daysPlus(startDate, 1), dayOff);
+        for (startDate; startDate <= finishDate;) {
+            addDays(startDate, morningDay, 3);
+            addDays(startDate, dayOff, 3);
+            addDays(startDate, nightDay, 3);
+            addDays(startDate, dayOff, 3);
         }
     }
     
@@ -189,39 +179,59 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         const lsData = JSON.parse(localStorage.getItem(key));
 
         for(let day in lsData) {
-
             const dayIndex = +day - 1;
             graphicD[dayIndex].time = deepCopy(graphicD[dayIndex].time);
+
             deleteSameValues(lsData[day], graphicD[dayIndex]);
-            
 
-            if(isEmpty(lsData[day])) {
-                delete lsData[day];
-            } else {
+                if (
+                  (lsData[day].actualType === "day-off" &&
+                    !lsData[day].holiday &&
+                    !graphicD[dayIndex].holiday) ||
+                  (lsData[day].actualType === "day-off" &&
+                    graphicD[dayIndex].annotation &&
+                    graphicD[dayIndex].holiday &&
+                    lsData[day].holiday === false)
+                ) {
+                  delete lsData[day].actualType;
+                  delete lsData[day].descr;
+                  delete lsData[day].name;
+                }
 
-                graphicD[dayIndex] = mergeDeep(graphicD[dayIndex], lsData[day]);
+                const actualType = lsData[day].actualType ? lsData[day].actualType : graphicD[dayIndex].actualType;
 
-            }
-            
-            if(graphicD[dayIndex].time) {
-                graphicD[dayIndex].calcTime = calcTime;
-                graphicD[dayIndex].calcTime();
-            }
-            if(graphicD[dayIndex].holiday && graphicD[dayIndex].graphicType !== "day-off") {
-                graphicD[dayIndex].checkHoliday();
-            }
+                if (
+                  lsData[day].time &&
+                  JSON.stringify(lsData[day].time) !==
+                    JSON.stringify(
+                      dayTypes.find((type) => type.actualType === actualType)
+                        .time
+                    )
+                ) {
+                  lsData[day].timeChanged = [];
+                  for (let key in lsData[day].time) {
+                    lsData[day].timeChanged.push(key);
+                  }
+                } else {
+                  delete lsData[day].timeChanged;
+                }
+
+            isEmpty(lsData[day]) ? delete lsData[day] : graphicD[dayIndex] = mergeDeep(graphicD[dayIndex], lsData[day]);
         }
 
-        if(isEmpty(lsData)) {
-            localStorage.removeItem(key);
-        } else {
-            localStorage.setItem(key, JSON.stringify(lsData));
-        }
+        isEmpty(lsData) ? localStorage.removeItem(key) : localStorage.setItem(key, JSON.stringify(lsData));
 
-    
     }
-    
-    console.log(graphicD);
+
+    graphicD.forEach(day => { // финальная проверка каждого дня
+        if (day.time) { day.calcTime = calcTime; }
+        if (day.calcTime) { day.calcTime(); }
+        if (day.checkHoliday) { day.checkHoliday(); }
+    });
+
+
+
+    // console.log(graphicD);
 
     return graphicD;
     }

@@ -35,17 +35,20 @@ export default function renderDayMenu(num) {
     });
 
     function getTimeDiv(timeType) {
-        let div;
-        if(timeType) {
-            div = `
+      let div;
+      if (timeType) {
+        div = `
             <div class=${timeType}>
                 ${day.time[timeType].shift[0]}-${day.time[timeType].shift[1]} 
-                ( ${getTimeInfo(day.finalTime[timeType])} )
-            </div>`
-        } else {
-            div = "<div class='disable'>00:00-00:00 ( 0ч 0м | 0ч )</div>";
-        }
-        return div;
+                ( ${getTimeInfo(day.finalTime[timeType])} )`;
+
+        if(day.timeChanged && day.timeChanged.find(type => type === timeType)) {
+            div += "<img src='./img/clock.svg' alt='clock'>"};
+        div += "</div>";
+      } else {
+        div = "<div class='disable'>00:00-00:00 ( 0ч 0м | 0ч )</div>";
+      }
+      return div;
     }
 
     if(day.time) {
@@ -105,6 +108,13 @@ dayMenu.querySelector(".day_menu_close").addEventListener("click", () => {
     hideElement(dayMenu);
     dayMenu.innerHTML = "";
 });
+dayMenu.addEventListener("click", (e) => {
+    if(e.target && e.target.matches(".day_menu")) {
+        hideElement(dayMenu);
+        dayMenu.innerHTML = "";
+    }
+})
+
 
 if(day.time) {
     dayMenu.querySelector(".actual").addEventListener("click", () => {
@@ -121,7 +131,6 @@ dayMenu.querySelector(".note").querySelector("textarea").addEventListener("input
 
 dayMenu.querySelector(".holiday_checkbox").querySelector("input[type='checkbox']").addEventListener("change", (e) => {
     setDaySettings(num, {holiday:e.target.checked});
-    // if(!day.holiday && day.actualType === "day-off") {console.log("abc")}
     renderCalendar(year, month, graphic.value);
     renderDayMenu(num);
 });
