@@ -1,11 +1,14 @@
 import renderTableHeader from "./render-table-header.js";
 import renderMonths from "./render-months.js";
 import renderCalendar from "./render-calendar.js";
+import renderStatistics from "./render_statistics.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
 
 
 export default function renderYears(year, id = "calendar") {
-    
+
+    if(+year < 2007) {year = 2007}
+
     renderTableHeader();
     let calendar = "<tbody><tr>";
     const startYear = year - 8;
@@ -20,6 +23,7 @@ export default function renderYears(year, id = "calendar") {
     document.getElementById(id).querySelectorAll(".year").forEach((year) => {
         year.addEventListener("click", (e) => {
             renderCalendar(e.target.innerText, getMonth(), graphic.value);
+            renderStatistics();
         });
     });
 

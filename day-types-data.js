@@ -22,6 +22,16 @@ const defaultTimeData = {
             break: dayTime.night12h.break,
         },
     },
+    morning8h: {
+        actual: {
+            shift: dayTime.morning8h.shift,
+            break: dayTime.morning8h.break,
+        },
+        graphic: {
+            shift: dayTime.morning8h.shift,
+            break: dayTime.morning8h.break,
+        },
+    },
 }
 
 const dayTypes = [
@@ -72,7 +82,19 @@ const dayTypes = [
         name:"За свой",
         descr:"За свой счёт",
         time: null,
-    }
+    },
+    {
+        actualType:"cal-8h-mdg",
+        name:"День",
+        descr:"Дневная смена",
+        time: defaultTimeData.morning8h,
+    },
+    {
+        actualType:"cal-8h-omd",
+        name:"Сверх",
+        descr:"Сверхурочная дневная смена",
+        time: defaultTimeData.morning8h,
+    },
 ];
 
 

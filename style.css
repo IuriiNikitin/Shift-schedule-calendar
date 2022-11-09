@@ -17,10 +17,10 @@
   background-clip:padding-box;
 }
 
-#calendar .cal-mdg{
+#calendar .cal-mdg, #calendar .cal-8h-mdg{
   background-color :#fff56d;
 }
-#calendar .cal-omd {
+#calendar .cal-omd, #calendar .cal-8h-omd {
   background-color:#ffd16d;
 }
 
@@ -211,7 +211,6 @@
 }
 .day_menu_data .graphic_time img, .day_menu_data .actual_time img {
   height: 15px;
-
 }
 
 .time_menu {
@@ -297,6 +296,21 @@
 }
 
 .modal_data .calendar_wrapper {
-  height: 460px;
+  box-sizing:border-box;
+  height: 475px;
+  border-bottom: #A3A4A8 solid 2px;
 }
 
+.modal_data .calendar_statistics {
+  margin-top: 10px;
+}
+.modal_data .calendar_statistics .statistics_container>div {
+  /* margin: 0px 0; */
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal_data .calendar_statistics .statistics_container {
+  margin: auto;
+  width: 80%;
+}

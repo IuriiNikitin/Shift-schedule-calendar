@@ -3,11 +3,16 @@ import getTableHeader from "./get-table-header.js";
 import renderMonths from "./render-months.js";
 import renderYears from "./render-years.js";
 import renderDayMenu from "./render-day-menu.js";
+import renderStatistics from "./render_statistics.js";
 
 export default function renderCalendar(year, month, graphic, id = "calendar") {
+    
+ 
 
     if(month < 0) {month = 11; year -= 1;};
     if(month > 11) {month = 0; year += 1;};
+
+    if(+year < 2000) {return};
 
     let header = getTableHeader(month, year, [2, 3, 2]);
     header += "<tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>";
@@ -52,9 +57,12 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
 
     document.getElementById(id).querySelectorAll(".arrow")[0].addEventListener("click", () => {
         renderCalendar(+year, month - 1, graphic);
+        renderStatistics();
+
     });
     document.getElementById(id).querySelectorAll(".arrow")[1].addEventListener("click", () => {
         renderCalendar(+year, month + 1, graphic);
+        renderStatistics();
     });
     document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
         renderMonths();

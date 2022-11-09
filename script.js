@@ -2,6 +2,7 @@
 
 import renderGraphicValues from "./render_graphic_values.js";
 import renderCalendar from "./render-calendar.js";
+import renderStatistics from "./render_statistics.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
 
 const graphic = document.getElementById("graphic");
@@ -11,10 +12,12 @@ const graphic = document.getElementById("graphic");
 
 renderGraphicValues();
 renderCalendar(new Date().getFullYear(), new Date().getMonth(), graphic.value);
+renderStatistics();
 
 
 graphic.addEventListener("change", (e) => {
     renderCalendar(getYear(), getMonth(), e.target.value);
+    renderStatistics();
     localStorage.setItem("current_graphic", e.target.value);
 });
 
@@ -26,7 +29,7 @@ function updateCalendar() {
     const timeUntilTomorrow = tomorrow - now;
 
     
-    const update = setTimeout(() => {
+    setTimeout(() => {
         const currentYear = now.getFullYear();
         const currentMonth = now.getMonth();
         const calendarMonth = getMonth();
@@ -51,6 +54,3 @@ function updateCalendar() {
 // });
 
 updateCalendar();
-
-
-

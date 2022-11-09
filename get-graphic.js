@@ -13,8 +13,10 @@ import deleteSameValues from "./delete-same-values.js";
 
 export default function getGraphic(year, month, graphic) { //смены 14.1, 14.2, 16.1-1, 16.1-2, 16.2-1, 16.2-2;
 
+    const benchmarkStart = new Date();
+
     const graphicD = [];
-    // if(year < 2000) { year = 2000};
+
     const now = new Date(year, month);
     const currentYear = now.getFullYear(); // Текущий год
     const currentMonth = now.getMonth(); // Текущий месяц
@@ -28,7 +30,7 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
     
         case "14.1":
         case "16.1-2":
-            startDate = new Date("2000/01/04"); 
+            startDate = new Date("2000/01/04");
             break;
     
         case "14.2":
@@ -37,14 +39,18 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
             break;
     
         case "16.1-1":
-            startDate = new Date("2000/01/10"); 
+            startDate = new Date("2000/01/10");
             break;
     
         case "16.2-1":
             startDate = new Date("2000/01/01");
             break;
+
+        case "5/2":
+            startDate = new Date("2000/01/03");
+            break;
     }
-    
+
     function calcTime() {
 
         switch (this.actualType) {
@@ -86,39 +92,31 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         }
     }
 
-    const dayOff = {
-        ...dayTypes.find(day => day.actualType === "day-off"),
-        graphicType: "day-off",
-        note:"",
-        holiday: false,
-        possibleTypes:["cal-omd", "cal-ond", "cal-sick", "cal-vac"],
-    };
-    
-    const morningDay = {
-        ...dayTypes.find(day => day.actualType === "cal-mdg"),
-        graphicType: "cal-mdg",
-        calcTime:calcTime,
-        checkHoliday:checkHoliday,
-        note:"",
-        holiday: false,
-        possibleTypes:["cal-ndg", "cal-sick", "cal-vac", "day-off-oex"],
-    };
-    
-    const nightDay = {
-        ...dayTypes.find(day => day.actualType === "cal-ndg"),
-        graphicType: "cal-ndg",
-        calcTime:calcTime,
-        checkHoliday:checkHoliday,
-        note:"",
-        holiday: false,
-        possibleTypes:["cal-mdg", "cal-sick", "cal-vac", "day-off-oex"],
-    };
-    
+    class Day {
+        constructor(dayType, possibleTypes){
+            
+            for(let key in dayTypes.find(day => day.actualType === dayType)){
+                this[key] = (dayTypes.find(day => day.actualType === dayType))[key];
+            }
+            this.graphicType = dayType;
+            this.note = "";
+            this.holiday = false;
+            this.possibleTypes = possibleTypes;
+            if(dayType !== "day-off") {
+                this.calcTime = calcTime;
+                this.checkHoliday = checkHoliday;
+            }
+        }
+    }
+    const dayOff = new Day("day-off", ["cal-omd", "cal-ond", "cal-sick", "cal-vac"]);
+    const morningDay = new Day("cal-mdg", ["cal-ndg", "cal-sick", "cal-vac", "day-off-oex"]);
+    const nightDay = new Day("cal-ndg", ["cal-mdg", "cal-sick", "cal-vac", "day-off-oex"]);
+    const morning8hDay = new Day("cal-8h-mdg", ["cal-sick", "cal-vac", "day-off-oex"]);
+    const dayOff8h = new Day("day-off", ["cal-8h-omd", "cal-sick", "cal-vac"]);
 
     
     function addDay(date, spread) {
         if (date <= finishDate && date >= firstDate) {
-            
             const day = {
                 date:new Date(date),
                 dayWeek: [7, 1, 2, 3, 4, 5, 6][new Date(date).getDay()],
@@ -142,7 +140,6 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
 }
     
      function findStartDate(daysInCycle) {
-    
         for (startDate; startDate < firstDate; daysPlus(startDate, daysInCycle)) {} // Считаем дату начала смен в месяце
     
         if (startDate.getDate() !== 1) { // откатываем начало смен на прошлый месяц если это не первое число 
@@ -150,26 +147,42 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
         }
      }
     
-    if (graphic === "14.1" || graphic === "14.2") {
-    
-        findStartDate(6);
-    
-        for (startDate; startDate <= finishDate;) {
-            addDays(startDate, morningDay, 3);
-            addDays(startDate, dayOff, 3);
-        }
-    } else {
-    
-        findStartDate(12);
-    
-        for (startDate; startDate <= finishDate;) {
-            addDays(startDate, morningDay, 3);
-            addDays(startDate, dayOff, 3);
-            addDays(startDate, nightDay, 3);
-            addDays(startDate, dayOff, 3);
-        }
+
+    switch(graphic) {
+        case "14.1":
+        case "14.2":
+        
+            findStartDate(6);
+            
+            for (startDate; startDate <= finishDate;) {
+                addDays(startDate, morningDay, 3);
+                addDays(startDate, dayOff, 3);
+            }
+            break;
+
+        case "16.1-1":
+        case "16.1-2":
+        case "16.2-1":
+        case "16.2-2":
+
+            findStartDate(12);
+
+            for (startDate; startDate <= finishDate;) {
+                addDays(startDate, morningDay, 3);
+                addDays(startDate, dayOff, 3);
+                addDays(startDate, nightDay, 3);
+                addDays(startDate, dayOff, 3);
+            }
+            break;
+
+        case "5/2" :
+            findStartDate(7);
+            for (startDate; startDate <= finishDate;) {
+                addDays(startDate, morning8hDay, 5);
+                addDays(startDate, dayOff8h, 2);
+            }
+            break;
     }
-    
     
 
     const key = `${year}:${month}:${graphic}`;
@@ -199,18 +212,17 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
                 }
 
                 const actualType = lsData[day].actualType ? lsData[day].actualType : graphicD[dayIndex].actualType;
+                const currentTime =  lsData[day].time;
+                const defaultTime = dayTypes.find((type) => type.actualType === actualType).time;
 
-                if (
-                  lsData[day].time &&
-                  JSON.stringify(lsData[day].time) !==
-                    JSON.stringify(
-                      dayTypes.find((type) => type.actualType === actualType)
-                        .time
-                    )
-                ) {
+                if (lsData[day].time && JSON.stringify(currentTime) !== JSON.stringify(defaultTime)) {
+
                   lsData[day].timeChanged = [];
+
                   for (let key in lsData[day].time) {
-                    lsData[day].timeChanged.push(key);
+                    if(JSON.stringify(currentTime[key]) !== JSON.stringify(defaultTime[key])) {
+                        lsData[day].timeChanged.push(key);
+                    }
                   }
                 } else {
                   delete lsData[day].timeChanged;
@@ -232,6 +244,10 @@ export default function getGraphic(year, month, graphic) { //смены 14.1, 14
 
 
     // console.log(graphicD);
+    
+    const benchmarkFinish = new Date();
+
+    // console.log(`Сгенерировано за ${benchmarkFinish - benchmarkStart} мс`);
 
     return graphicD;
     }

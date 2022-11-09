@@ -2,6 +2,7 @@ import renderTableHeader from "./render-table-header.js";
 import getMonthsNames from "./get-month-names.js";
 import renderCalendar from "./render-calendar.js";
 import renderYears from "./render-years.js";
+import renderStatistics from "./render_statistics.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
 
 export default function renderMonths(id = "calendar") {
@@ -20,6 +21,7 @@ export default function renderMonths(id = "calendar") {
     document.getElementById(id).querySelectorAll(".month").forEach((month, num) => {
         month.addEventListener("click", () => {
             renderCalendar(getYear(), num, graphic.value);
+            renderStatistics();
         });
     });
 
