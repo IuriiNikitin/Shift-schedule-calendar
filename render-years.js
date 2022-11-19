@@ -14,7 +14,10 @@ export default function renderYears(year, id = "calendar") {
     const startYear = year - 8;
 
     for(let i = 1; i <= 15; i++) {
-        calendar += `<td class="year">${startYear + i}`
+        let clazz = "year";
+        if(startYear + i === new Date().getFullYear()) {clazz += " today"};
+        if(startYear + i === getYear()) {clazz += " selected_item"};
+        calendar += `<td class="${clazz}">${startYear + i}`;
         if(!(i % 3)){calendar += "<tr>"}
     }
 
@@ -34,9 +37,9 @@ export default function renderYears(year, id = "calendar") {
         renderCalendar(getYear(), getMonth(), graphic.value);
     });
     document.getElementById(id).querySelectorAll(".arrow")[0].addEventListener("click", () => {
-        renderYears(+year - 15);
+        renderYears(+year - 1);
     });
     document.getElementById(id).querySelectorAll(".arrow")[1].addEventListener("click", () => {
-        renderYears(+year + 15);
+        renderYears(+year + 1);
     });
 }

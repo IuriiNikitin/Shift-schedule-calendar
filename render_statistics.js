@@ -1,7 +1,9 @@
 import getGraphic from "./get-graphic.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
+import getStatistics from "./get-statistics.js";
 
 export default function renderStatistics() {
+    getStatistics();
     const statistics = document.querySelector(".calendar_statistics");
     const days = getGraphic(getYear(), getMonth(), graphic.value);
 

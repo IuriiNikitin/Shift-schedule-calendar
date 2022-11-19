@@ -44,6 +44,10 @@
   outline-offset:-2px;
 }
 
+#calendar .selected_item {
+  background-color: #EFEFEF;
+}
+
 #calendar td div:first-child {
   position: absolute;
   top: 3px;
@@ -52,6 +56,8 @@
 #calendar .year, #calendar .month {
   cursor: pointer;
   width: calc(100% / 3);
+  font-size: 14px;
+  color:#000;
 }
 
 #calendar tr:first-child th:nth-child(2) div {
@@ -98,6 +104,7 @@
 }
 #graphic {
   margin-bottom: 10px;
+  min-width: 100px;
 }
 
 .day_menu {
@@ -113,7 +120,7 @@
   cursor:default;
 }
 
-.day_menu_title, .time_menu_title {
+.day_menu_title, .time_menu_title, .statistics_menu_title {
   margin-bottom: 8px;
   color:#000;
 }
@@ -311,6 +318,71 @@
 }
 
 .modal_data .calendar_statistics .statistics_container {
+  cursor: pointer;
   margin: auto;
   width: 80%;
+}
+
+.statistics_menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  cursor:default;
+}
+
+.statistics_menu_content {
+  position: relative;
+  box-sizing:border-box;
+  padding: 25px 15px;
+  padding-bottom: 45px;
+  background-color:white;
+  width: 90%;
+  /* min-height: 300px; */
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.statistics_menu_close {
+  position: absolute;
+  top: 2px;
+  right: 11px;
+  font-size: 30px;
+  color: #000;
+  opacity: .5;
+  font-weight: 700;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.statistics_menu_data {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.statistics_menu_data table {
+  color: #000;
+  font-weight: normal;
+  margin-top: 20px;
+
+}
+.statistics_menu_data table,
+.statistics_menu_data th,
+.statistics_menu_data td {
+  border: 1px solid black;
+  border-collapse:collapse;
+  padding: 5px;
+}
+
+/* .statistics_menu_data table th:first-child,  */
+.statistics_menu_data table td:first-child {
+  text-align: left;
 }

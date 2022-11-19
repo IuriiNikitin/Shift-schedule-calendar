@@ -12,7 +12,10 @@ export default function renderMonths(id = "calendar") {
     let calendar = "<tbody><tr>";
 
     for(let i = 1; i <= 12; i++) {
-        calendar += `<td class="month">${months[i - 1]}`
+        let clazz = "month";
+        if(i - 1 === new Date().getMonth()) {clazz += " today"};
+        if(i - 1 === getMonth()) {clazz += " selected_item"};
+        calendar += `<td class="${clazz}">${months[i - 1]}`
         if(!(i % 3)){calendar += "<tr>"}
     }
 
