@@ -3,7 +3,7 @@ import getTableHeader from "./get-table-header.js";
 import renderMonths from "./render-months.js";
 import renderYears from "./render-years.js";
 import renderDayMenu from "./render-day-menu.js";
-import renderStatistics from "./render_statistics.js";
+import renderStatistics from "./render-statistics.js";
 
 export default function renderCalendar(year, month, graphic, id = "calendar") {
     

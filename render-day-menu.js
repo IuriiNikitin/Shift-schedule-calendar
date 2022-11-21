@@ -2,7 +2,7 @@ import getGraphic from "./get-graphic.js";
 import dayTypes from "./day-types-data.js";
 import renderTimeMenu from "./render-time-menu.js";
 import renderCalendar from "./render-calendar.js";
-import renderStatistics from "./render_statistics.js";
+import renderStatistics from "./render-statistics.js";
 import { getMonth, getYear } from "./get-month-get-year.js";
 import getTimeInfo from "./get-time-info.js";
 import { showElement, hideElement } from "./show-hide-element.js";
