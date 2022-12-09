@@ -15,10 +15,25 @@
                 <div class="modal__title">Календарь</div>
                 <div class="modal_data">
                     <div class="calendar_wrapper">
-                        <select name="graphic" id="graphic"></select>
-                        <table id="calendar"></table>
+                        <div class="calendar_content">
+                            <select name="graphic" id="graphic"></select>
+                            <table id="calendar"></table>
+                            <div class="settings_btn_wrapper">
+                                <img width="50px" class="month_settings" src="./img/settings.svg" alt="month settings">
+                            </div>
+                        </div>
                         <div class="day_menu hide"></div>
                         <div class="time_menu hide"></div>
+
+                        <div class="month_settings_menu hide">
+                            <div class="month_settings_menu_content">
+                                <div class="month_settings_menu_title"></div>
+                                <div class="month_settings_menu_data">
+                                </div>
+                            
+                                <div data-close class="month_settings_menu_close">&times;</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="calendar_statistics"></div>
                     <div class="statistics_menu hide"></div>
