@@ -443,7 +443,7 @@ box-sizing:border-box;
 padding: 25px 15px;
 background-color:white;
 width: 90%;
-min-height: 300px;
+min-height: 250px;
 border-radius: 10px;
 border: 1px solid rgba(0, 0, 0, .2);
 }
@@ -462,8 +462,80 @@ cursor: pointer;
 }
 
 .month_settings_menu_data {
-width: 80%;
+width: 90%;
 margin: auto;
 display: flex;
+
 flex-direction: column;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.tabs {
+  font-size: 0;
+}
+
+.tabs>input[type="radio"] {
+  display: none;
+}
+
+.tabs>div {
+  /* скрыть контент по умолчанию */
+  display: none;
+  border: 1px solid #e0e0e0;
+  /* padding: 10px 15px; */
+  font-size: 16px;
+}
+
+/* отобразить контент, связанный с вабранной радиокнопкой (input type="radio") */
+#tab-btn-1:checked~#content-1,
+#tab-btn-2:checked~#content-2{
+  display: flex;
+  flex-direction: column;
+  padding: 10px 30px;
+}
+.month_settings_menu_data button {
+  margin: 8px 0;
+}
+
+.tabs>label {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  padding: 2px 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: normal;
+  color:#000;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  top: 1px;
+}
+
+.tabs>label:not(:first-of-type) {
+  border-left: none;
+}
+
+.tabs>input[type="radio"]:checked+label {
+  background-color: #fff;
+  border-bottom: 1px solid #fff;
 }
