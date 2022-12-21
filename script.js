@@ -5,6 +5,8 @@ import renderCalendar from "./render-calendar.js";
 import renderStatistics from "./render-statistics.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
 
+import renderSettingsMenu from "./render-settings-menu.js";
+
 const graphic = document.getElementById("graphic");
 
 
@@ -13,6 +15,8 @@ const graphic = document.getElementById("graphic");
 renderGraphicValues();
 renderCalendar(new Date().getFullYear(), new Date().getMonth(), graphic.value);
 renderStatistics();
+
+// renderSettingsMenu();
 
 
 graphic.addEventListener("change", (e) => {
