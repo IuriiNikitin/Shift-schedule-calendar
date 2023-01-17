@@ -64,5 +64,3 @@ function getElement(url, selector, func) {
         func(html.querySelectorAll(selector));
         });
 }
-
-
