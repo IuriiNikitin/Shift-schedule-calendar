@@ -32,7 +32,8 @@ export default function getStatistics() {
             } else {
                 this.days = days.length;
                 if(days.find(day => day.finalTime)) {
-                    this.hours = roundHours(days.map(day => day.finalTime.actual).reduce((acc, number) => acc + number));
+                    const hours = days.map(day => day.finalTime.actual).reduce((acc, number) => acc + number);
+                    this.hours = Math.floor(hours * 100) / 100;
                 } else {
                     const hours = days.length * 24;
                     this.hours = days.length ? "~" + hours : hours;
