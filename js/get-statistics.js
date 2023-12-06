@@ -1,7 +1,7 @@
 import getGraphic from "./get-graphic.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
-import roundHours from "./round-hours.js";
-import dayTypes from "./day-types-data.js";
+
+
 
 export default function getStatistics() {
 
@@ -9,11 +9,8 @@ export default function getStatistics() {
 
     const statisticsArr = [];
 
-    const weekends = days.filter(day => day.actualType === "day-off");
-    const workingDays = days.filter(day => day.actualType !== "day-off" && 
-    day.actualType !== "cal-sick" && 
-    day.actualType !== "cal-vac" &&
-    day.actualType !== "day-off-oex");
+    const weekends = days.filter(day => day.actualType === "day-off" || day.actualType === "day-off-8h");
+    const workingDays = days.filter(day => day.time);
 
     const morningDays = days.filter(day => day.actualType === "cal-mdg" || day.actualType === "cal-8h-mdg");
     const nightDays = days.filter(day => day.actualType === "cal-ndg");

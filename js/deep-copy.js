@@ -1,3 +1,9 @@
 export default function deepCopy(some) {
-    return JSON.parse(JSON.stringify(some));
+    const copy = JSON.parse(JSON.stringify(some));
+    for (let key in some) {
+        if (typeof some[key] === "function") {
+            copy[key] = some[key];
+        }
+    }
+    return copy;
 }

@@ -1,5 +1,5 @@
 import getGraphic from "./get-graphic.js";
-import dayTypes from "./day-types-data.js";
+import days from "../data/days-data.js";
 import renderTimeMenu from "./render-time-menu.js";
 import renderCalendar from "./render-calendar.js";
 import renderStatistics from "./render-statistics.js";
@@ -7,6 +7,7 @@ import { getMonth, getYear } from "./get-month-get-year.js";
 import getTimeInfo from "./get-time-info.js";
 import { showElement, hideElement } from "./show-hide-element.js";
 import setDaySettings from "./set-day-settings.js";
+import deepCopy from "./deep-copy.js";
 
 export default function renderDayMenu(num) {
 
@@ -19,14 +20,17 @@ export default function renderDayMenu(num) {
     let holidayCheckbox = "<input type='checkbox' ";
     let holidayAnnotation = "";
 
-    const graphicTypeDescr =  dayTypes.find(type => type.actualType === day.graphicType).descr;
+
+    const graphicTypeDescr =  days.find(type => type.actualType === day.graphicType).descr;
 
     let dayTypeOptions = `<option value=${day.graphicType}>${graphicTypeDescr}`;
-    // if(day.actualType === day.graphicType) {dayTypeOptions += "selected"};
-    // dayTypeOptions += `>${graphicTypeDescr}`;
+
+
+
+
 
     day.possibleTypes.forEach(type => {
-       const option = dayTypes.find(day => day.actualType === type);
+       const option = days.find(day => day.actualType === type);
 
        dayTypeOptions += `<option value=${type} `;
 
@@ -136,7 +140,9 @@ dayMenu.querySelector(".holiday_checkbox").querySelector("input[type='checkbox']
     renderDayMenu(num);
 });
 dayMenu.querySelector("select").addEventListener("change", (e) => {
-    setDaySettings(num, dayTypes.find(day => day.actualType === e.target.value));
+		const savedSettings = deepCopy(days.find(day => day.actualType === e.target.value));
+		savedSettings.toPrimitive();
+    setDaySettings(num, savedSettings);
     renderCalendar(year, month, graphic.value);
     renderStatistics();
     renderDayMenu(num);

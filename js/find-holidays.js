@@ -1,4 +1,4 @@
-import holidays from "./holidays-list-data.js";
+import holidays from "../data/holidays-list-data.js";
 
 export default function findHolidays(date, func) {
 

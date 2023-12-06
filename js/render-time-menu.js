@@ -7,7 +7,7 @@ import setDaySettings from "./set-day-settings.js";
 import calcFinalTime from "./calc-final-time.js";
 import convertTimeArr from "./convert-time-arr.js";
 import renderDayMenu from "./render-day-menu.js";
-import dayTypes from "./day-types-data.js";
+import days from "../data/days-data.js";
 
 export default function renderTimeMenu(num, timeType) {
 
@@ -126,7 +126,7 @@ export default function renderTimeMenu(num, timeType) {
     });
 
     timeMenu.querySelector(".time_menu_btns").querySelectorAll("button")[0].addEventListener("click", () => {
-        setDaySettings(num, {time:{[timeType]:dayTypes.find(type => type.actualType === day.actualType).time[timeType]}});
+        setDaySettings(num, {time:{[timeType]:days.find(type => type.actualType === day.actualType).time[timeType]}});
         renderDayMenu(num);
         renderTimeMenu(num, timeType);
         renderCalendar(year, month, graphic.value);
