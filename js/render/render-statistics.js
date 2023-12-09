@@ -1,4 +1,4 @@
-import getStatistics from "./get-statistics.js";
+import getStatistics from "../get-statistics.js";
 import renderStatisticsMenu from "./render-statistics-menu.js";
 
 export default function renderStatistics() {

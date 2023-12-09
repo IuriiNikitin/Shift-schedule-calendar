@@ -1,5 +1,5 @@
 import { getYear, getMonth } from "./get-month-get-year.js";
-import mergeDeep from "./deep-merge-objects.js";
+import mergeDeep from "./utils/deep-merge-objects.js";
 
 
 export default function setDaySettings(day, settingsObj) {

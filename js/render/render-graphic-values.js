@@ -1,4 +1,4 @@
-import graphics from "../data/graphics-data.js";
+import graphics from "../../data/graphics-data.js";
 
 export default function renderGraphicValues() {
 

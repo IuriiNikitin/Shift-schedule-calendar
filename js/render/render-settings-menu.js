@@ -1,6 +1,6 @@
-import { hideElement, showElement } from "./show-hide-element.js";
-import { getMonth, getYear } from "./get-month-get-year.js";
-import getMonthsNames from "./get-month-names.js";
+import { hideElement, showElement } from "../utils/show-hide-element.js"
+import { getMonth, getYear } from "../get-month-get-year.js";
+import getMonthsNames from "../utils/get-month-names.js"
 
 export default function renderSettingsMenu() {
     

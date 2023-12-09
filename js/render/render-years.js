@@ -2,7 +2,7 @@ import renderTableHeader from "./render-table-header.js";
 import renderMonths from "./render-months.js";
 import renderCalendar from "./render-calendar.js";
 import renderStatistics from "./render-statistics.js";
-import { getYear, getMonth } from "./get-month-get-year.js";
+import { getYear, getMonth } from "../get-month-get-year.js";
 
 
 export default function renderYears(year, id = "calendar") {

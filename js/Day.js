@@ -1,6 +1,6 @@
-import convertTimeArr from "../js/convert-time-arr.js";
-import calcFinalTime from "../js/calc-final-time.js";
-import deepCopy from "../js/deep-copy.js";
+import convertTimeArr from "./convert-time-arr.js";
+import calcFinalTime from "./calc-final-time.js";
+import deepCopy from "./utils/deep-copy.js"
 
 class Day {
 	constructor({ name, descr, dayType, time, possibleTypes }) {

@@ -1,5 +1,5 @@
-import getTableHeader from "./get-table-header.js";
-import { getMonth, getYear } from "./get-month-get-year.js";
+import getTableHeader from "../get-table-header.js";
+import { getMonth, getYear } from "../get-month-get-year.js";
 
 export default function renderTableHeader(id = "calendar") {
     

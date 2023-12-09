@@ -1,7 +1,7 @@
-import getStatistics from "./get-statistics.js";
-import { getMonth, getYear } from "./get-month-get-year.js";
-import getMonthsNames from "./get-month-names.js";
-import { showElement, hideElement } from "./show-hide-element.js";
+import getStatistics from "../get-statistics.js";
+import { getMonth, getYear } from "../get-month-get-year.js";
+import getMonthsNames from "../utils/get-month-names.js";
+import { showElement, hideElement } from "../utils/show-hide-element.js";
 
 export default function renderStatisticsMenu() {
 

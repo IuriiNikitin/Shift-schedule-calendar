@@ -1,4 +1,4 @@
-import daysPlus from "./days-plus.js";
+import daysPlus from "./utils/days-plus.js";
 
 const convertTime = (timeArray, date) =>{
 

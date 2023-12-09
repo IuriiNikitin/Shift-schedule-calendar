@@ -1,5 +1,5 @@
-import getGraphic from "./get-graphic.js";
-import getTableHeader from "./get-table-header.js";
+import getGraphic from "../get-graphic.js";
+import getTableHeader from "../get-table-header.js";
 import renderMonths from "./render-months.js";
 import renderYears from "./render-years.js";
 import renderDayMenu from "./render-day-menu.js";

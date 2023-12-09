@@ -1,12 +1,12 @@
 import findHolidays from "./find-holidays.js";
 import findSalary from "./find-salary.js";
-import isEmpty from "./is-empty.js";
-import deepCopy from "./deep-copy.js"
-import daysPlus from "./days-plus.js";
+import isEmpty from "./utils/is-empty.js";
+import deepCopy from "./utils/deep-copy.js"
+import daysPlus from "./utils/days-plus.js";
 import graphics from "../data/graphics-data.js";
 import days from "../data/days-data.js";
-import mergeDeep from "./deep-merge-objects.js";
-import deleteSameValues from "./delete-same-values.js";
+import mergeDeep from "./utils/deep-merge-objects.js";
+import deleteSameValues from "./utils/delete-same-values.js";
 
 
 export default function getGraphic(year, month, graphic) {

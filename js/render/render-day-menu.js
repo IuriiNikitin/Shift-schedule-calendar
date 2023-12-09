@@ -1,13 +1,13 @@
-import getGraphic from "./get-graphic.js";
-import days from "../data/days-data.js";
+import getGraphic from "../get-graphic.js";
+import days from "../../data/days-data.js";
 import renderTimeMenu from "./render-time-menu.js";
 import renderCalendar from "./render-calendar.js";
 import renderStatistics from "./render-statistics.js";
-import { getMonth, getYear } from "./get-month-get-year.js";
-import getTimeInfo from "./get-time-info.js";
-import { showElement, hideElement } from "./show-hide-element.js";
-import setDaySettings from "./set-day-settings.js";
-import deepCopy from "./deep-copy.js";
+import { getMonth, getYear } from "../get-month-get-year.js";
+import getTimeInfo from "../utils/get-time-info.js";
+import { showElement, hideElement } from "../utils/show-hide-element.js";
+import setDaySettings from "../set-day-settings.js";
+import deepCopy from "../utils/deep-copy.js";
 
 export default function renderDayMenu(num) {
 

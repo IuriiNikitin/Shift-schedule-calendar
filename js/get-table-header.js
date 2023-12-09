@@ -1,4 +1,4 @@
-import getMonthsNames from "./get-month-names.js";
+import getMonthsNames from "./utils/get-month-names.js";
 
 export default function getTableHeader(month, year, colspan = [0, 0, 0]) {
 

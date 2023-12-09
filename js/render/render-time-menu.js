@@ -1,13 +1,13 @@
-import getGraphic from "./get-graphic.js";
+import getGraphic from "../get-graphic.js";
 import renderCalendar from "./render-calendar.js";
-import { getMonth, getYear } from "./get-month-get-year.js";
-import { showElement, hideElement } from "./show-hide-element.js";
-import getTimeInfo from "./get-time-info.js";
-import setDaySettings from "./set-day-settings.js";
-import calcFinalTime from "./calc-final-time.js";
-import convertTimeArr from "./convert-time-arr.js";
+import { getMonth, getYear } from "../get-month-get-year.js";
+import { showElement, hideElement } from "../utils/show-hide-element.js";
+import getTimeInfo from "../utils/get-time-info.js";
+import setDaySettings from "../set-day-settings.js";
+import calcFinalTime from "../calc-final-time.js";
+import convertTimeArr from "../convert-time-arr.js";
 import renderDayMenu from "./render-day-menu.js";
-import days from "../data/days-data.js";
+import days from "../../data/days-data.js";
 
 export default function renderTimeMenu(num, timeType) {
 

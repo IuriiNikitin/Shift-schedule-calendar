@@ -1,11 +1,11 @@
 "use strict";
 
-import renderGraphicValues from "./render-graphic-values.js";
-import renderCalendar from "./render-calendar.js";
-import renderStatistics from "./render-statistics.js";
+import renderGraphicValues from "./render/render-graphic-values.js";
+import renderCalendar from "./render/render-calendar.js";
+import renderStatistics from "./render/render-statistics.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
 
-import renderSettingsMenu from "./render-settings-menu.js";
+import renderSettingsMenu from "./render/render-settings-menu.js";
 
 const graphic = document.getElementById("graphic");
 
