@@ -66,10 +66,11 @@ class Day {
 			};
 
 			this.checkHoliday = function() {
-				if (
-					this.holiday &&
-					!this.possibleTypes.find((type) => type === "day-off")
-			) {
+				const isDayOff = this.graphicType !== "day-off" && this.graphicType !== "day-off-8h"
+				const isPossibleDayOff = this.possibleTypes.find((type) => type === "day-off") &&
+				this.possibleTypes.find((type) => type === "day-off-8h");
+
+				if (this.holiday && !isPossibleDayOff && isDayOff) {
 					this.possibleTypes = deepCopy(this.possibleTypes);
 					this.possibleTypes.push("day-off");
 			}

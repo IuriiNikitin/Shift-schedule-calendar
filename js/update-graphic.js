@@ -14,7 +14,7 @@ function updateGraphic(key, graphicD) {
 
 				const dayIndex = +day - 1;
 
-				graphicD[dayIndex].time = deepCopy(graphicD[dayIndex].time || null); // делаем глубокую копию времени
+				graphicD[dayIndex].time = deepCopy(graphicD[dayIndex].time); // делаем глубокую копию времени
 
 				deleteSameValues(lsData[day], graphicD[dayIndex]); //очищаем LS от дублированных данных
 
@@ -22,7 +22,7 @@ function updateGraphic(key, graphicD) {
 						if (
 							(lsData[day].actualType === "day-off" && !lsData[day].holiday && !graphicD[dayIndex].holiday) ||
 							(lsData[day].actualType === "day-off" && graphicD[dayIndex].annotation &&
-							graphicD[dayIndex].holiday && lsData[day].holiday === false)
+							graphicD[dayIndex].holiday && lsData[day].holiday === false) //сброс выходного дня при снятии галочки праздничного дня
 						) {
 							delete lsData[day].actualType;
 							delete lsData[day].descr;
