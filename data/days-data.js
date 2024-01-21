@@ -8,6 +8,12 @@ const days = [
         dayType: "day-off",
         possibleTypes: ["cal-omd", "cal-ond", "cal-sick", "cal-vac"],
     }),
+		new Day({
+			name: "Выход",
+			descr: "Выходной день",
+			dayType: "day-off_1",
+			possibleTypes: ["cal-mdg_1", "cal-sick", "cal-vac"],
+	}),
     new Day({
         name: "День",
         descr: "Дневная смена",
@@ -15,6 +21,13 @@ const days = [
         time: dayTime.morning12h,
         possibleTypes: ["cal-ndg", "cal-sick", "cal-vac", "day-off-oex"],
     }),
+		new Day({
+			name: "День",
+			descr: "Дневная смена",
+			dayType: "cal-mdg_1",
+			time: dayTime.morning12h_1,
+			possibleTypes: ["cal-sick", "cal-vac", "day-off-oex"],
+	}),
     new Day({
         name: "Ночь",
         descr: "Ночная смена",

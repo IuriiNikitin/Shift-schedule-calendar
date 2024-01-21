@@ -22,7 +22,7 @@
   background-clip:padding-box;
 }
 
-#calendar .cal-mdg, #calendar .cal-8h-mdg{
+#calendar .cal-mdg, #calendar .cal-8h-mdg, #calendar .cal-mdg_1{
   background-color :#fff56d;
 }
 #calendar .cal-omd, #calendar .cal-8h-omd {

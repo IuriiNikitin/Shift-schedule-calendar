@@ -9,7 +9,9 @@ export default function getStatistics() {
 
     const statisticsArr = [];
 
-    const weekends = days.filter(day => day.actualType === "day-off" || day.actualType === "day-off-8h");
+    const weekends = days.filter(day => day.actualType === "day-off" || 
+																				day.actualType === "day-off-8h" || 
+																				day.actualType === "day-off_1");
     const workingDays = days.filter(day => day.time);
 
     const morningDays = days.filter(day => day.actualType === "cal-mdg" || day.actualType === "cal-8h-mdg");
