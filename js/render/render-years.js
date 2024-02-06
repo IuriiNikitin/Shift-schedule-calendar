@@ -30,10 +30,10 @@ export default function renderYears(year, id = "calendar") {
         });
     });
 
-    document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
+    document.getElementById(id).querySelector(".btn-month").addEventListener("click", () => {
         renderMonths();
     });
-    document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
+    document.getElementById(id).querySelector(".btn-year").addEventListener("click", () => {
         renderCalendar(getYear(), getMonth(), graphic.value);
     });
     document.getElementById(id).querySelectorAll(".arrow")[0].addEventListener("click", () => {

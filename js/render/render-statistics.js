@@ -7,11 +7,11 @@ export default function renderStatistics() {
 
     const data = getStatistics();
 
-    let statisticsInfo = `<div class="statistics_container">`
+    let statisticsInfo = `<div class="statistics_container w-75 mx-auto">`
     
     for(let i = 0; i < 3; i++) {
         statisticsInfo += `
-            <div>
+            <div class="d-flex justify-content-between">
                 <div>${data[i].name}</div>
                 <div>${data[i].days}</div>
             </div>`

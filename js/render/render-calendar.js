@@ -34,17 +34,19 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
     for(let i = 0; i < days.length; i++) {
 
         let clazz = days[i].actualType;
-        let iconsTop = "<div class='icons_top'>";
-        let iconsBottom = "<div class='icons_bottom'>";
+        let iconsTop = "<div class='position-absolute top-0 start-0 mt-1 ms-1 h-17 d-flex icons_top'>";
+        let iconsBottom = "<div class='position-absolute bottom-0 start-0 mb-1 ms-1 h-17 d-flex icons_bottom'>";
         const num = days[i].date.getDate();
         const name = days[i].name;
         if(days[i].today) {clazz += " today"};
-        if(days[i].salary) {iconsTop += "<img src='./img/rouble.svg' alt='rouble'>"};
-        if(days[i].holiday) {iconsTop += "<img src='./img/holiday.svg' alt='holiday'>"};
-        if(days[i].note) {iconsBottom += "<img src='./img/note.svg' alt='note'>"};
-        if(days[i].timeChanged) {iconsBottom += "<img src='./img/clock.svg' alt='clock'>"};
+        if(days[i].salary) {iconsTop += "<img class='d-block h-100 me-1' src='./img/rouble.svg' alt='rouble'>"};
+        if(days[i].holiday) {iconsTop += "<img class='d-block h-100 me-1' src='./img/holiday.svg' alt='holiday'>"};
+        if(days[i].note) {iconsBottom += "<img class='d-block h-100 me-1' src='./img/note.svg' alt='note'>"};
+        if(days[i].timeChanged) {iconsBottom += "<img class='d-block h-100 me-1' src='./img/clock.svg' alt='clock'>"};
 
-        calendar += `<td class="day ${clazz}"><div>${num}</div><div>${name}</div>`;
+        calendar += `<td class="position-relative border day ${clazz}">
+                        <div class="position-absolute top-0 end-0 me-1">${num}</div>
+                        <div>${name}</div>`;
 
         if(days[i].salary || days[i].holiday) {calendar += iconsTop + "</div>"};
         if (days[i].note || days[i].timeChanged) {calendar += iconsBottom};
@@ -64,10 +66,10 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
         renderCalendar(+year, month + 1, graphic);
         renderStatistics();
     });
-    document.getElementById(id).querySelectorAll("button")[0].addEventListener("click", () => {
+    document.getElementById(id).querySelector(".btn-month").addEventListener("click", () => {
         renderMonths();
     });
-    document.getElementById(id).querySelectorAll("button")[1].addEventListener("click", () => {
+    document.getElementById(id).querySelector(".btn-year").addEventListener("click", () => {
         renderYears(+year);
     });
 
