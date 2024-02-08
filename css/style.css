@@ -1,6 +1,7 @@
 /* *{
   border:1px solid black !important;
 } */
+
 .calendar_wrapper {
   max-width: 600px;
 }
@@ -15,5 +16,5 @@
 
 .day {
 	width: calc(100% / 7);
-	height: 100px;
+	/* height: 100px; */
 }

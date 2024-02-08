@@ -4,6 +4,7 @@ import renderGraphicValues from "./render/render-graphic-values.js";
 import renderCalendar from "./render/render-calendar.js";
 import renderStatistics from "./render/render-statistics.js";
 import { getYear, getMonth } from "./get-month-get-year.js";
+import setDaysHeight from "./utils/set-days-height.js";
 
 import renderSettingsMenu from "./render/render-settings-menu.js";
 
@@ -46,8 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
             updateCalendar();
         }, timeUntilTomorrow);
     }
+
+		setDaysHeight();
     
-    
+		window.addEventListener('resize', (e) => {
+			setDaysHeight();
+		});
     
     // window.addEventListener("focus", () => {
     //     const calendarCurrentDay = +document.querySelector(".today").querySelector("div").innerHTML;
