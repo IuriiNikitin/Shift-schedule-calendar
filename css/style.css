@@ -5,10 +5,15 @@
   max-width: 600px;
 }
 
-#calendar {
+/* #calendar {
   aspect-ratio: 17/18;
-}
+} */
 
 .h-17 {
   height: 17%;
+}
+
+.day {
+	width: calc(100% / 7);
+	height: 100px;
 }
