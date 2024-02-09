@@ -4,7 +4,6 @@ import renderCalendar from "./render-calendar.js";
 import renderYears from "./render-years.js";
 import renderStatistics from "./render-statistics.js";
 import { getYear, getMonth } from "../get-month-get-year.js";
-import setDaysHeight from "../utils/set-days-height.js";
 
 export default function renderMonths(id = "calendar") {
 
@@ -31,7 +30,6 @@ export default function renderMonths(id = "calendar") {
 
     document.getElementById(id).querySelector(".btn-month").addEventListener("click", () => {
         renderCalendar(getYear(), getMonth(), graphic.value);
-				setDaysHeight();
     });
     document.getElementById(id).querySelector(".btn-year").addEventListener("click", () => {
         renderYears(getYear());

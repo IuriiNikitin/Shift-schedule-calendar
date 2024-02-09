@@ -4,6 +4,7 @@ import renderMonths from "./render-months.js";
 import renderYears from "./render-years.js";
 import renderDayMenu from "./render-day-menu.js";
 import renderStatistics from "./render-statistics.js";
+import setDaysHeight from "../utils/set-days-height.js";
 
 export default function renderCalendar(year, month, graphic, id = "calendar") {
     
@@ -58,6 +59,7 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
     }
 
     document.getElementById(id).innerHTML += calendar;
+		setDaysHeight();
 
     document.getElementById(id).querySelector(".arrow-left").addEventListener("click", () => {
         renderCalendar(+year, month - 1, graphic);
