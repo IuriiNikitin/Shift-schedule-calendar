@@ -7,7 +7,8 @@ import renderStatistics from "./render-statistics.js";
 import setDaysHeight from "../utils/set-days-height.js";
 
 export default function renderCalendar(year, month, graphic, id = "calendar") {
-    
+
+	const daysOfWeek = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
  
 
     if(month < 0) {month = 11; year -= 1;};
@@ -16,7 +17,12 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
     if(+year < 2000) {return};
 
     let header = getTableHeader(month, year, [2, 3, 2]);
-    header += "<tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>";
+
+    header += "<tr class='lh-lg'>";
+
+		daysOfWeek.forEach(dayName => {
+			header += `<th class="p-2">${dayName}`;
+		});
 
 
     document.getElementById(id).innerHTML = header;

@@ -1,7 +1,6 @@
 import getStatistics from "../get-statistics.js";
 import { getMonth, getYear } from "../get-month-get-year.js";
 import getMonthsNames from "../utils/get-month-names.js";
-import { showElement, hideElement } from "../utils/show-hide-element.js";
 
 export default function renderStatisticsMenu() {
 
@@ -9,10 +8,14 @@ export default function renderStatisticsMenu() {
     const currentYear = getYear();
 
     const statisticsData = getStatistics();
-    const statisticsMenu = document.querySelector(".statistics_menu");
+
+		const statisticsModal = document.getElementById('statisticsModal');
+		const statisticsModalLabel = document.getElementById('statisticsModalLabel');
+		const statisticsModalBody = statisticsModal.querySelector('.modal-body');
+
     let statisticsTable = `
-    <table>
-        <thead>
+    <table class="table table-bordered table-sm">
+        <thead class="table-light text-center">
             <th>Тип дней</th>
             <th>Дней</th>
             <th>Часов</th>
@@ -23,29 +26,13 @@ export default function renderStatisticsMenu() {
         if(item.days) {
             statisticsTable += `
             <tr>
-                <td>${item.name}</td>
-                <td>${item.days}</td>
-                <td>${item.hours}</td>
+                <td >${item.name}</td>
+                <td class="text-center">${item.days}</td>
+                <td class="text-center">${item.hours}</td>
         </tr>`
         }
     })
 
-
-    let statisticsContent = `
-    <div class="statistics_menu_content">
-    <div class="statistics_menu_title">${currentMonthName} ${currentYear}</div>
-    <div class="statistics_menu_data">
-    ${statisticsTable}
-    </div>
-    <div data-close="" class="statistics_menu_close">×</div>
-</div>
-`
-
-statisticsMenu.innerHTML = statisticsContent;
-showElement(statisticsMenu);
-
-statisticsMenu.querySelector(".statistics_menu_close").addEventListener("click", () => {
-    hideElement(statisticsMenu);
-    statisticsMenu.innerHTML = "";
-});
+		statisticsModalLabel.innerHTML = `${currentMonthName} ${currentYear}`;
+		statisticsModalBody.innerHTML = `${statisticsTable}`;
 }

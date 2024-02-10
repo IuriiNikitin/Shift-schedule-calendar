@@ -4,6 +4,7 @@ import renderStatisticsMenu from "./render-statistics-menu.js";
 export default function renderStatistics() {
 
     const statistics = document.querySelector(".calendar_statistics");
+		const statisticsModal = document.getElementById('statisticsModal');
 
     const data = getStatistics();
 
@@ -19,7 +20,7 @@ export default function renderStatistics() {
 
 statistics.innerHTML = statisticsInfo;
 
-statistics.querySelector(".statistics_container").addEventListener("click", () => {
-    renderStatisticsMenu();
+statisticsModal.addEventListener('shown.bs.modal', () => {
+	renderStatisticsMenu();
 });
 }
