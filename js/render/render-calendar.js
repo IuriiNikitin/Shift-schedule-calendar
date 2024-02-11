@@ -30,7 +30,7 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
 
     const days = getGraphic(year, month, graphic);
 
-    let calendar = "<tbody><tr>";
+    let calendar = "<tbody id='calendar-body'><tr>";
 
     if(days[0].dayWeek !== 1) { //Добавляем пустые столбцы в начале, если это не понедельник
         for(let i = 1; i < days[0].dayWeek; i++) {
@@ -50,8 +50,9 @@ export default function renderCalendar(year, month, graphic, id = "calendar") {
         if(days[i].holiday) {iconsTop += "<img class='d-block h-100 me-1' src='./img/holiday.svg' alt='holiday'>"};
         if(days[i].note) {iconsBottom += "<img class='d-block h-100 me-1' src='./img/note.svg' alt='note'>"};
         if(days[i].timeChanged) {iconsBottom += "<img class='d-block h-100 me-1' src='./img/clock.svg' alt='clock'>"};
+				const color = days[i].color ? `style="background-color:${days[i].color}` : "";
 
-        calendar += `<td class="border p-1 p-sm-2 day ${clazz}">
+        calendar += `<td class="border p-1 p-sm-2 cursor-pointer day ${clazz}" data-bs-toggle="modal" data-bs-target="#dayModal"${color}">
 												<div class="d-flex flex-column justify-content-between h-100">
 													<div class="order-2">${name}</div>
 												

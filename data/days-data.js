@@ -1,5 +1,6 @@
 import Day from "../js/Day.js";
 import dayTime from "./days-time-data.js";
+import colors from "./colors.js";
 
 const days = [
     new Day({
@@ -20,6 +21,7 @@ const days = [
         dayType: "cal-mdg",
         time: dayTime.morning12h,
         possibleTypes: ["cal-ndg", "cal-sick", "cal-vac", "day-off-oex"],
+				color: colors.morning,
     }),
 		new Day({
 			name: "День",
@@ -27,6 +29,7 @@ const days = [
 			dayType: "cal-mdg_1",
 			time: dayTime.morning12h_1,
 			possibleTypes: ["cal-sick", "cal-vac", "day-off-oex"],
+			color: colors.morning,
 	}),
     new Day({
         name: "Ночь",
@@ -34,6 +37,7 @@ const days = [
         dayType: "cal-ndg",
         time: dayTime.night12h,
         possibleTypes: ["cal-mdg", "cal-sick", "cal-vac", "day-off-oex"],
+				color: colors.night,
     }),
     new Day({
         name: "День",
@@ -41,6 +45,7 @@ const days = [
         dayType: "cal-8h-mdg",
         time: dayTime.morning8h,
         possibleTypes: ["cal-sick", "cal-vac", "day-off-oex"],
+				color: colors.morning,
     }),
     new Day({
         name: "Выход",
@@ -53,22 +58,26 @@ const days = [
         name: "Сверх",
         descr: "Сверхурочная дневная смена",
         time: dayTime.morning12h,
+				color: colors.overtimeMorning,
     }),
     new Day({
         dayType: "cal-ond",
         name: "Сверх",
         descr: "Сверхурочная ночная смена",
         time: dayTime.night12h,
+				color:colors.overtimeNight,
     }),
     new Day({
         dayType: "cal-sick",
         name: "Боль",
         descr: "Больничный",
+				color: colors.sick,
     }),
     new Day({
         dayType: "cal-vac",
         name: "Отпуск",
         descr: "Отпуск",
+				color: colors.vacation,
     }),
     new Day({
         dayType: "day-off-oex",
@@ -80,6 +89,7 @@ const days = [
         name: "Сверх",
         descr: "Сверхурочная дневная смена",
         time: dayTime.morning8h,
+				color: colors.overtimeMorning,
     }),
 ];
 

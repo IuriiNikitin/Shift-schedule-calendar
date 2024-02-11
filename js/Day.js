@@ -3,7 +3,7 @@ import calcFinalTime from "./calc-final-time.js";
 import deepCopy from "./utils/deep-copy.js"
 
 class Day {
-	constructor({ name, descr, dayType, time, possibleTypes }) {
+	constructor({ name, descr, dayType, time, possibleTypes, color }) {
 			this.name = name;
 			this.descr = descr;
 			this.possibleTypes = possibleTypes;
@@ -11,6 +11,10 @@ class Day {
 			this.graphicType = dayType;
 			this.note = "";
 			this.holiday = false;
+
+			if(color) {
+				this.color = color;
+			}
 
 			if (time) {
 					this.time = {

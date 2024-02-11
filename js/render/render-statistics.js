@@ -8,7 +8,7 @@ export default function renderStatistics() {
 
     const data = getStatistics();
 
-    let statisticsInfo = `<div class="statistics_container w-75 mx-auto">`
+    let statisticsInfo = `<div class="statistics_container w-75 mx-auto cursor-pointer">`
     
     for(let i = 0; i < 3; i++) {
         statisticsInfo += `
