@@ -16,7 +16,7 @@ export default function getGraphic(year, month, graphic) {
     const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate(); // Последнее число текущего месяца
     const firstDate = new Date(currentYear, currentMonth, 1); // Первая дата месяца
     const lastDate = new Date(currentYear, currentMonth, lastDay); // Последняя дата месяца
-    
+
     function addDay(date, spread) {
         if (date <= lastDate && date >= firstDate) {
             const day = {
@@ -67,7 +67,7 @@ export default function getGraphic(year, month, graphic) {
 
 		const startDate = findStartDate(daysInCycle, currGraphic.startDate);
 
-		while (startDate < lastDate) {
+		while (startDate <= lastDate) {
             for (let i = 0; i < currGraphic.pattern.length; i++) {
                 const [day, num] = currGraphic.pattern[i];
                 addDays(startDate, day, num);
@@ -83,7 +83,7 @@ export default function getGraphic(year, month, graphic) {
         if (day.checkHoliday) { day.checkHoliday(); }
     });
 
-    // console.log(graphicD);
+    console.log(graphicD);
 
     return graphicD;
     }
